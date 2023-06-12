@@ -98,10 +98,9 @@ cd $HOME/projects/tntcomplex/
     if header is not None:
         print(header)
 
+    is_slurm = True
     for job_id, command_line in enumerate(sorted_command_lines, 1):
-        if is_beaker:
-            print(f'test $SGE_TASK_ID -eq {job_id} && sleep 10 && {command_line}')
-        elif is_slurm:
+        if is_slurm:
             print(f'test $SLURM_ARRAY_TASK_ID -eq {job_id} && sleep 10 && {command_line}')
         else:
             print(f'{command_line}')
