@@ -91,7 +91,7 @@ conda activate mypt
 export LANG="en_US.utf8"
 export LANGUAGE="en_US:en"
 
-cd $HOME/projects/tntcomplex/
+cd $HOME/projects/tntcomplex/tkbc/scripts
 
 """
 
