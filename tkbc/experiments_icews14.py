@@ -40,7 +40,7 @@ def main(argv):
 
     configurations = list(cartesian_product(hyp_space_1))
 
-    path = 'scripts/logs/icews14'
+    path = 'logs/icews14'
 
     # If the folder that will contain logs does not exist, create it
     #if not os.path.exists(path):
