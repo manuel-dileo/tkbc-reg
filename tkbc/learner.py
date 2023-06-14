@@ -9,7 +9,7 @@ from torch import optim
 from datasets import TemporalDataset
 from optimizers import TKBCOptimizer, IKBCOptimizer
 from models import ComplEx, TComplEx, TNTComplEx
-from regularizers import N3, Lambda3
+from regularizers import N3, Lambda3, L1, L2, N3Temp, F2
 
 parser = argparse.ArgumentParser(
     description="Temporal ComplEx"
