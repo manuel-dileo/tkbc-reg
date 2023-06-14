@@ -136,7 +136,7 @@ for epoch in range(args.max_epochs):
                 avg_both(*dataset.eval(model, split, -1 if split != 'train' else 50000))
                 for split in ['valid', 'test', 'train']
             ]
-            print("valid: ", valid['MRR'])
-            print("test: ", test['MRR'])
-            print("train: ", train['MRR'])
+            print("valid: ", "MRR: ", valid['MRR'], "hits@[1,3,10]", valid['hits@[1,3,10]'])
+            print("test: ", "MRR: ", test['MRR'], "hits@[1,3,10]", test['hits@[1,3,10]'])
+            print("train: ", "MRR: ", train['MRR'], "hits@[1,3,10]", train['hits@[1,3,10]'])
 
