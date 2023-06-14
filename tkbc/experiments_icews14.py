@@ -74,8 +74,8 @@ def main(argv):
 
     header = f"""#!/usr/bin/env bash
 
-#SBATCH --output=/home/%u/slogs/kbclm-%A_%a.out
-#SBATCH --error=/home/%u/slogs/kbclm-%A_%a.err
+#SBATCH --output=/home/%u/slogs/tntcomplex-%A_%a.out
+#SBATCH --error=/home/%u/slogs/tntcomplex-%A_%a.err
 #SBATCH --partition=PGR-Standard
 #SBATCH --gres=gpu:1
 #SBATCH --mem=14GB # memory
