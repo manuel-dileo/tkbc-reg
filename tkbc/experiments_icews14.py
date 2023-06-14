@@ -42,7 +42,7 @@ def main(argv):
     """
     hyp_space_1 = dict(
            rank=[256],
-           emb_reg=[1e-2]
+           emb_reg=[1e-2],
            time_reg=[1, 1e-1, 1e-2, 1e-3],
            time_norm=['L2']
     )
