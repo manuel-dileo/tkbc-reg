@@ -19,15 +19,15 @@ def summary(configuration):
 
 
 def to_cmd(c, _path=None):
-    command = f'PYTHONPATH=. python3 tkbc/learner.py --rank 156 --emb_reg 1e-2 --time_reg 1e-2' \
-        f'--dataset ICEWS14' \
+    command = f'PYTHONPATH=. python3 ../learner.py --rank 156 --emb_reg 1e-2 --time_reg 1e-2' \
+        f'--dataset ICEWS14' \ #change here for other datasets
         f'--model TNTComplEx' \
         f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --time_reg {c["time_reg"]}'
     return command
 
 
 def to_logfile(c, path):
-    outfile = "{}/icews14.{}.log".format(path, summary(c).replace("/", "_"))
+    outfile = "{}/icews14.{}.log".format(path, summary(c).replace("/", "_")) #change here for other datasets
     return outfile
 
 

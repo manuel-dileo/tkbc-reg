@@ -53,6 +53,12 @@ parser.add_argument(
     '--time_reg', default=0., type=float,
     help="Timestamp regularizer strength"
 )
+
+parser.add_argument(
+    '--time_norm', default=0., type=str,
+    help="Timestamp regularizer norm"
+)
+
 parser.add_argument(
     '--no_time_emb', default=False, action="store_true",
     help="Use a specific embedding for non temporal relations"
@@ -75,7 +81,13 @@ model = model.cuda()
 opt = optim.Adagrad(model.parameters(), lr=args.learning_rate)
 
 emb_reg = N3(args.emb_reg)
-time_reg = Lambda3(args.time_reg)
+time_reg = {
+    'Lambda3': Lambda3(args.time_reg),
+    'L1': L1(args.time_reg),
+    'L2': L2(args.time_reg),
+    'N3': N3Temp(args.time_reg),
+    'F2': F2(args.time_reg)
+}[args.time_norm]
 
 for epoch in range(args.max_epochs):
     examples = torch.from_numpy(
