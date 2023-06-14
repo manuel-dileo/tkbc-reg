@@ -43,7 +43,7 @@ class L1(Regularizer):
     def forward(self, factor: Tuple[torch.Tensor]):
         ddiff = factor[1:] - factor[:-1]
         diff = torch.abs(ddiff)
-        return self.weight * torch.sum(diff) / (factors.shape[0]-1)
+        return self.weight * torch.sum(diff) / (factor.shape[0]-1)
 
 class L2(Regularizer):
     def __init__(self, weight: float):
@@ -53,7 +53,7 @@ class L2(Regularizer):
     def forward(self, factor: Tuple[torch.Tensor]):
         ddiff = factor[1:] - factor[:-1]
         diff = torch.sqrt(torch.abs(ddiff)**2)
-        return self.weight * torch.sum(diff) / (factors.shape[0]-1)
+        return self.weight * torch.sum(diff) / (factor.shape[0]-1)
 
 class F2(Regularizer):
     def __init__(self, weight: float):
@@ -63,7 +63,7 @@ class F2(Regularizer):
     def forward(self, factor: Tuple[torch.Tensor]):
         ddiff = factor[1:] - factor[:-1]
         diff = ddiff**2
-        return self.weight * torch.sum(diff) / (factors.shape[0]-1)
+        return self.weight * torch.sum(diff) / (factor.shape[0]-1)
 
 class N3Temp(Regularizer):
     def __init__(self, weight: float):
@@ -73,4 +73,4 @@ class N3Temp(Regularizer):
     def forward(self, factor: Tuple[torch.Tensor]):
         ddiff = factor[1:] - factor[:-1]
         diff = torch.abs(ddiff)**3
-        return self.weight * torch.sum(diff) / (factors.shape[0]-1)
+        return self.weight * torch.sum(diff) / (factor.shape[0]-1)
