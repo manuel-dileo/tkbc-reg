@@ -52,7 +52,7 @@ class L2(Regularizer):
 
     def forward(self, factor: Tuple[torch.Tensor]):
         ddiff = factor[1:] - factor[:-1]
-        diff = torch.sqrt(torch.abs(ddiff)**2)
+        diff = (torch.sum(torch.abs(ddiff)**2))**1/2
         return self.weight * torch.sum(diff) / (factor.shape[0]-1)
 
 class F2(Regularizer):
