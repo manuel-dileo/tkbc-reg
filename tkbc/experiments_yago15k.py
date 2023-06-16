@@ -22,7 +22,7 @@ def to_cmd(c, _path=None):
     command = f'PYTHONPATH=. python3 ../learner.py --rank 156 --emb_reg 1e-2 --time_reg 1e-2 '\
         f'--dataset yago15k '\
         f'--model TNTComplEx '\
-        f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --time_reg {c["time_reg"]} --time_norm {c["time_norm"]}'
+        f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --no_time_emb --time_reg {c["time_reg"]} --time_norm {c["time_norm"]}'
     return command
 
 
