@@ -20,7 +20,7 @@ def summary(configuration):
 
 def to_cmd(c, _path=None):
     command = f'PYTHONPATH=. python3 ../learner.py'\
-        f'--dataset ICEWS15 '\
+        f'--dataset ICEWS05-15 '\
         f'--model TNTComplEx '\
         f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --time_reg {c["time_reg"]} --time_norm {c["time_norm"]}'
     return command
