@@ -9,7 +9,7 @@ from torch import nn
 
 class Regularizer(nn.Module, ABC):
     @abstractmethod
-    def forward(self, factors: Tuple[torch.Tensor]):
+    def forward(self, factors: Tuple[torch.Tensor],  *args, **kwargs):
         pass
 
 class N3(Regularizer):
@@ -17,7 +17,7 @@ class N3(Regularizer):
         super(N3, self).__init__()
         self.weight = weight
 
-    def forward(self, factors):
+    def forward(self, factors,  *args, **kwargs):
         norm = 0
         for f in factors:
             norm += self.weight * torch.sum(torch.abs(f) ** 3)
@@ -29,7 +29,7 @@ class Lambda3(Regularizer):
         super(Lambda3, self).__init__()
         self.weight = weight
 
-    def forward(self, factor):
+    def forward(self, factors: Tuple[torch.Tensor]):
         ddiff = factor[1:] - factor[:-1]
         rank = int(ddiff.shape[1] / 2)
         diff = torch.sqrt(ddiff[:, :rank]**2 + ddiff[:, rank:]**2)**3
@@ -74,3 +74,15 @@ class N3Temp(Regularizer):
         ddiff = factor[1:] - factor[:-1]
         diff = torch.abs(ddiff)**3
         return self.weight * torch.sum(diff) / (factor.shape[0]-1)
+
+class Lambda3Decay(Regularizer):
+    def __init__(self, weight: float):
+        super(Lambda3, self).__init__()
+        self.weight = weight
+
+    def forward(self, factor: Tuple[torch.Tensor], decay_factor=1e-1):
+        ddiff = tuple(tensor - torch.sum([factor[j]*(1-decay_factor)**(i-j) for j in range(i, 0, -1)])\
+                      for i,tensor in enumerate(factor) if i>0)
+        rank = int(ddiff.shape[1] / 2)
+        diff = torch.sqrt(ddiff[:, :rank]**2 + ddiff[:, rank:]**2)**3
+        return self.weight * torch.sum(diff) / (factor.shape[0] - 1)
