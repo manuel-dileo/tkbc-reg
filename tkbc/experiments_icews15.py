@@ -33,10 +33,10 @@ def to_logfile(c, path):
 
 def main(argv):
     hyp_space_1 = dict(
-        rank=[128, 256],
-        emb_reg=[1, 1e-1, 1e-2, 1e-3],
-        time_reg=[1, 1e-1, 1e-2, 1e-3],
-        time_norm=['Lambda3','N3','L1','L2','F2']
+        rank=[128],
+        emb_reg=[1e-4],
+        time_reg=[10, 1e-4],
+        time_norm=['N3','L1','L2','F2']
     )
 
     configurations = list(cartesian_product(hyp_space_1))
