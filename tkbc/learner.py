@@ -55,7 +55,7 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    '--time_norm', default=0., type=str,
+    '--time_norm', default="Lambda3", type=str,
     help="Timestamp regularizer norm"
 )
 
