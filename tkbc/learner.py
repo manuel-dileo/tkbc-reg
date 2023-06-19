@@ -9,7 +9,7 @@ from torch import optim
 from datasets import TemporalDataset
 from optimizers import TKBCOptimizer, IKBCOptimizer
 from models import ComplEx, TComplEx, TNTComplEx
-from regularizers import N3, Lambda3, L1, L2, N3Temp, F2
+from regularizers import N3, Lambda3, L1, L2, N3Temp, F2, Lambda3Decay
 
 parser = argparse.ArgumentParser(
     description="Temporal ComplEx"
@@ -86,7 +86,8 @@ time_reg = {
     'L1': L1(args.time_reg),
     'L2': L2(args.time_reg),
     'N3': N3Temp(args.time_reg),
-    'F2': F2(args.time_reg)
+    'F2': F2(args.time_reg),
+    'Lambda3Decay': Lambda3Decay(args.time_reg)
 }[args.time_norm]
 
 for epoch in range(args.max_epochs):
