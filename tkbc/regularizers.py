@@ -77,7 +77,7 @@ class N3Temp(Regularizer):
 
 class Lambda3Decay(Regularizer):
     def __init__(self, weight: float):
-        super(Lambda3, self).__init__()
+        super(Lambda3Decay, self).__init__()
         self.weight = weight
 
     def forward(self, factor: Tuple[torch.Tensor], decay_factor=1e-1):
