@@ -74,8 +74,7 @@ class ExpDecayRegularizer(TimeRegularizer):
         return torch.stack(ddiff)
 
     def forward(self, factors: Tuple[torch.Tensor]):
-        super().forward(factors)
-
+        return super().forward(factors)
 
 """
 class Lambda3(Regularizer):
