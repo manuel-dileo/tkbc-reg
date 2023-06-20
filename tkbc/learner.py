@@ -9,7 +9,8 @@ from torch import optim
 from datasets import TemporalDataset
 from optimizers import TKBCOptimizer, IKBCOptimizer
 from models import ComplEx, TComplEx, TNTComplEx
-from regularizers import N3, Lambda3, L1, L2, N3Temp, F2, Lambda3Decay
+#from regularizers import N3, Lambda3, L1, L2, N3Temp, F2, Lambda3Decay
+from regularizers import N3, SmoothRegularizer, ExpDecayRegularizer
 
 parser = argparse.ArgumentParser(
     description="Temporal ComplEx"
@@ -49,9 +50,15 @@ parser.add_argument(
     '--emb_reg', default=0., type=float,
     help="Embedding regularizer strength"
 )
+
 parser.add_argument(
-    '--time_reg', default=0., type=float,
+    '--time_reg_w', default=0., type=float,
     help="Timestamp regularizer strength"
+)
+
+parser.add_argument(
+    '--time_reg', default='smooth', type=str,
+    help='Type of time regularizer [smooth, expdecay]'
 )
 
 parser.add_argument(
@@ -81,14 +88,21 @@ model = model.cuda()
 opt = optim.Adagrad(model.parameters(), lr=args.learning_rate)
 
 emb_reg = N3(args.emb_reg)
+"""
 time_reg = {
-    'Lambda3': Lambda3(args.time_reg),
-    'L1': L1(args.time_reg),
-    'L2': L2(args.time_reg),
-    'N3': N3Temp(args.time_reg),
-    'F2': F2(args.time_reg),
-    'Lambda3Decay': Lambda3Decay(args.time_reg)
-}[args.time_norm]
+    'Lambda3': Lambda3(args.time_reg_w),
+    'L1': L1(args.time_reg_w),
+    'L2': L2(args.time_reg_w),
+    'N3': N3Temp(args.time_reg_w),
+    'F2': F2(args.time_reg_w),
+    'Lambda3Decay': Lambda3Decay(args.time_reg_w)
+}[args.time_reg]
+"""
+
+time_reg = {
+    'smooth': SmoothRegularizer(args.time_reg_w, args.time_norm),
+    'expdecay': ExpDecayRegularizer(args.time_reg_w, args.time_norm)
+}[args.time_reg]
 
 for epoch in range(args.max_epochs):
     examples = torch.from_numpy(
