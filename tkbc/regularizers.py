@@ -67,7 +67,7 @@ class ExpDecayRegularizer(TimeRegularizer):
             factor = factors[i+1]
             aux = tuple()
             for j in range(i, -1, -1):
-                f = factor[j] * (1 - self.decay_factor) ** (i - j)
+                f = factors[j] * (1 - self.decay_factor) ** (i - j)
                 aux+=(f,)
             past_contrib = sum(aux)
             ddiff += (factor - past_contrib,)
