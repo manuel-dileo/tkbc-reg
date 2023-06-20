@@ -13,7 +13,7 @@ from datasets import TemporalDataset
 class TKBCOptimizer(object):
     def __init__(
             self, model: TKBCModel,
-            emb_regularizer: Regularizer, temporal_regularizer: TemporalRegularizer,
+            emb_regularizer: Regularizer, temporal_regularizer: TimeRegularizer,
             optimizer: optim.Optimizer, batch_size: int = 256,
             verbose: bool = True
     ):
