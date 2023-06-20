@@ -6,7 +6,7 @@ from torch import nn
 from torch import optim
 
 from models import TKBCModel
-from regularizers import Regularizer, TemporalRegularizer
+from regularizers import Regularizer, TimeRegularizer
 from datasets import TemporalDataset
 
 
