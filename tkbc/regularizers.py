@@ -63,6 +63,7 @@ class ExpDecayRegularizer(TimeRegularizer):
         self.decay_factor = decay_factor
     def time_regularize(self, factors: Tuple[torch.Tensor]):
         ddiff = tuple()
+        print(factors)
         for i in range(len(factors)-1):
             factor = factors[i+1]
             aux = tuple()
