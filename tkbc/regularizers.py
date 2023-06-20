@@ -42,7 +42,7 @@ class TimeRegularizer(Regularizer, ABC):
     def time_regularize(self, factors: Tuple[torch.Tensor], *args, **kwargs):
         pass
 
-    def forward(self, factors: Tuple[torch.Tensor], norm, *args, **kwargs):
+    def forward(self, factors: Tuple[torch.Tensor]):
         ddiff = self.time_regularize(factors, args, kwargs)
         diff = norm(ddiff)
         return self.weight * torch.sum(diff) / (factors.shape[0] - 1)
@@ -53,7 +53,8 @@ class SmoothRegularizer(TimeRegularizer):
 
     def time_regularize(self, factors: Tuple[torch.Tensor]):
         return factors[1:] - factors[:-1]
-    def forward(self, factors: Tuple[torch.Tensor], norm, *args, **kwargs):
+
+    def forward(self, factors: Tuple[torch.Tensor]):
         return super().forward(factors, norm)
 
 class ExpDecayRegularizer(TimeRegularizer):
@@ -72,8 +73,8 @@ class ExpDecayRegularizer(TimeRegularizer):
                 ddiff += (f-past_contrib,)
         return ddiff
 
-    def forward(self, factors: Tuple[torch.Tensor], norm):
-        super().forward(factors, norm)
+    def forward(self, factors: Tuple[torch.Tensor]):
+        super().forward(factors, self.norm)
 
 
 """

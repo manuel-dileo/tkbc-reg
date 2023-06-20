@@ -6,14 +6,14 @@ from torch import nn
 from torch import optim
 
 from models import TKBCModel
-from regularizers import Regularizer
+from regularizers import Regularizer, TemporalRegularizer
 from datasets import TemporalDataset
 
 
 class TKBCOptimizer(object):
     def __init__(
             self, model: TKBCModel,
-            emb_regularizer: Regularizer, temporal_regularizer: Regularizer,
+            emb_regularizer: Regularizer, temporal_regularizer: TemporalRegularizer,
             optimizer: optim.Optimizer, batch_size: int = 256,
             verbose: bool = True
     ):
