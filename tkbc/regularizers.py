@@ -49,9 +49,7 @@ class TimeRegularizer(Regularizer, ABC):
 
 class SmoothRegularizer(TimeRegularizer):
     def __init__(self, weight: float, norm: str):
-        super(SmoothRegularizer, self).__init__()
-        self.weight = weight
-        self.norm = NORM[norm]
+        super(SmoothRegularizer, self).__init__(weight, norm)
 
     def time_regularize(self, factors: Tuple[torch.Tensor]):
         return factors[1:] - factors[:-1]
@@ -60,9 +58,7 @@ class SmoothRegularizer(TimeRegularizer):
 
 class ExpDecayRegularizer(TimeRegularizer):
     def __init__(self, weight: float, norm: str, decay_factor=1e-1):
-        super(SmoothRegularizer, self).__init__()
-        self.weight = weight
-        self.norm = NORM[norm]
+        super(ExpDecayRegularizer, self).__init__(weight, norm)
         self.decay_factor = decay_factor
     def time_regularize(self, factors: Tuple[torch.Tensor]):
         ddiff = tuple()
