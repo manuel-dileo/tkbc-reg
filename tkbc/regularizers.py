@@ -44,7 +44,7 @@ class TimeRegularizer(Regularizer, ABC):
 
     def forward(self, factors: Tuple[torch.Tensor]):
         ddiff = self.time_regularize(factors)
-        diff = norm(ddiff)
+        diff = self.norm(ddiff)
         return self.weight * torch.sum(diff) / (factors.shape[0] - 1)
 
 class SmoothRegularizer(TimeRegularizer):
