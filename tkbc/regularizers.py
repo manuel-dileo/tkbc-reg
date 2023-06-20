@@ -16,7 +16,7 @@ NORM = {
 
 class Regularizer(nn.Module, ABC):
     @abstractmethod
-    def forward(self, factors: Tuple[torch.Tensor],  *args, **kwargs):
+    def forward(self, factors: Tuple[torch.Tensor]):
         pass
 
 class N3(Regularizer):
@@ -27,23 +27,23 @@ class N3(Regularizer):
         super(N3, self).__init__()
         self.weight = weight
 
-    def forward(self, factors,  *args, **kwargs):
+    def forward(self, factors):
         norm = 0
         for f in factors:
             norm += self.weight * torch.sum(torch.abs(f) ** 3)
         return norm / factors[0].shape[0]
 
 class TimeRegularizer(Regularizer, ABC):
-    def __init__(self, weight: float, norm: str):
+    def __init__(self, weight: float, norm: str, *args, **kwargs):
         super(TimeRegularizer, self).__init__()
         self.weight = weight
         self.norm = NORM[norm]
     @abstractmethod
-    def time_regularize(self, factors: Tuple[torch.Tensor], *args, **kwargs):
+    def time_regularize(self, factors: Tuple[torch.Tensor]):
         pass
 
     def forward(self, factors: Tuple[torch.Tensor]):
-        ddiff = self.time_regularize(factors, args, kwargs)
+        ddiff = self.time_regularize(factors)
         diff = norm(ddiff)
         return self.weight * torch.sum(diff) / (factors.shape[0] - 1)
 
@@ -55,7 +55,7 @@ class SmoothRegularizer(TimeRegularizer):
         return factors[1:] - factors[:-1]
 
     def forward(self, factors: Tuple[torch.Tensor]):
-        return super().forward(factors, norm)
+        return super().forward(factors)
 
 class ExpDecayRegularizer(TimeRegularizer):
     def __init__(self, weight: float, norm: str, decay_factor=1e-1):
@@ -70,11 +70,11 @@ class ExpDecayRegularizer(TimeRegularizer):
                     f = factor[j]*(1-self.decay_factor)**(i-j)
                     aux += (f,)
                 past_contrib = sum(aux)
-                ddiff += (f-past_contrib,)
+                ddiff += (factor-past_contrib,)
         return ddiff
 
     def forward(self, factors: Tuple[torch.Tensor]):
-        super().forward(factors, self.norm)
+        super().forward(factors)
 
 
 """
