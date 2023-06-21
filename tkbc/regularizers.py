@@ -8,9 +8,9 @@ from torch import nn
 
 NORM = {
     'N3': lambda factors: torch.abs(factors)**3,
-    'Lambda3': lambda factors: torch.sqrt(ddiff[:, :int(factors.shape[1] / 2)]**2 + ddiff[:, int(factors.shape[1] / 2):]**2)**3,
+    'Lambda3': lambda factors: torch.sqrt(factors[:, :int(factors.shape[1] / 2)]**2 + factors[:, int(factors.shape[1] / 2):]**2)**3,
     'L1': lambda factors: torch.abs(factors),
-    'L2': lambda factors: (torch.sum(torch.abs(ddiff)**2))**1/2,
+    'L2': lambda factors: (torch.sum(torch.abs(factors)**2))**1/2,
     'F2': lambda factors: factors**2,
 }
 
