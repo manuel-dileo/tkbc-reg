@@ -33,10 +33,11 @@ def to_logfile(c, path):
 
 def main(argv):
     hyp_space_1 = dict(
-        rank=[189 * 10],
+        rank=[5, 25, 50, 100, 500, 2000],
         emb_reg=[1e-1, 1e-2, 1e-3, 1e-4],
-        time_reg_w=[10, 1, 1e-1, 1e-2, 1e-3, 1e-4],
-        time_norm=['N3', 'L1', 'L2', 'F2'],
+        time_reg_w=[1, 1e-1, 1e-2, 1e-3, 1e-4],
+        time_norm=['Np', 'Lp'],
+        p_norm=[1, 2, 3, 4, 5],
         time_reg=['smooth']
     )
 

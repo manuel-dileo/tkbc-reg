@@ -51,7 +51,8 @@ class Lp(Norm):
         self.p = p
 
     def forward(self, factors: Tuple[torch.Tensor]):
-        return sum(torch.sum(torch.abs(f) ** self.p) ** (1.0 / self.p)
+        return sum(
+            torch.sum(torch.abs(f) ** self.p) ** (1.0 / self.p)
             for f in factors)
 
 class Np(Norm):
