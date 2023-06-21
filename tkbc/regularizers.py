@@ -25,8 +25,13 @@ class N3(Regularizer):
             norm += self.weight * torch.sum(torch.abs(f) ** 3)
         return norm / factors[0].shape[0]
 
+class Norm(ABC):
+    @abstractmethod
+    def forward(self, factors: Tuple[torch.Tensor]):
+        pass
+
 class TimeRegularizer(Regularizer, ABC):
-    def __init__(self, weight: float, norm: Norm, *args, **kwargs):
+    def __init__(self, weight: float, norm, *args, **kwargs):
         super(TimeRegularizer, self).__init__()
         self.weight = weight
         self.norm = norm
@@ -39,11 +44,6 @@ class TimeRegularizer(Regularizer, ABC):
         norm_diff = self.norm.forward(diff)
         return self.weight * norm_diff / (factors.shape[0] - 1)
 
-
-class Norm(ABC):
-    @abstractmethod
-    def forward(self, factors: Tuple[torch.Tensor]):
-        pass
 
 class Lp(Norm):
     def __init__(self, p: float):
@@ -65,7 +65,7 @@ class Np(Norm):
             torch.sum(torch.abs(f) ** self.p)
             for f in factors)
 class SmoothRegularizer(TimeRegularizer):
-    def __init__(self, weight: float, norm: str):
+    def __init__(self, weight: float, norm):
         super(SmoothRegularizer, self).__init__(weight, norm)
 
     def time_regularize(self, factors: Tuple[torch.Tensor]):
@@ -75,7 +75,7 @@ class SmoothRegularizer(TimeRegularizer):
         return super().forward(factors)
 
 class ExpDecayRegularizer(TimeRegularizer):
-    def __init__(self, weight: float, norm: str, decay_factor=1e-1):
+    def __init__(self, weight: float, norm, decay_factor=1e-1):
         super(ExpDecayRegularizer, self).__init__(weight, norm)
         self.decay_factor = decay_factor
     def time_regularize(self, factors: Tuple[torch.Tensor]):
