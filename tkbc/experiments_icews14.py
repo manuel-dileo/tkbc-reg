@@ -22,7 +22,7 @@ def to_cmd(c, _path=None):
     command = f'PYTHONPATH=. python3 ../learner.py '\
         f'--dataset ICEWS14 '\
         f'--model TNTComplEx '\
-        f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --time_reg {c["time_reg"]} --time_norm {c["time_norm"]} --time_reg_w {c["time_reg_w"]}'
+        f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --time_reg {c["time_reg"]} --time_norm {c["time_norm"]} --time_reg_w {c["time_reg_w"]} --p_norm {c["p_norm"]}'
     return command
 
 
@@ -36,7 +36,7 @@ def main(argv):
         rank=[156*10],
         emb_reg=[1e-1, 1e-2, 1e-3, 1e-4],
         time_reg_w=[10, 1, 1e-1, 1e-2, 1e-3, 1e-4],
-        time_norm=['N3','L1','L2','F2'],
+        time_norm=['Lp', 'Np'],
         time_reg =['smooth']
     )
 

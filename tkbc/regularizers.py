@@ -6,14 +6,6 @@ from typing import Tuple, Optional
 import torch
 from torch import nn
 
-NORM = {
-    'N3': lambda factors: torch.abs(factors)**3,
-    'Lambda3': lambda factors: torch.sqrt(factors[:, :int(factors.shape[1] / 2)]**2 + factors[:, int(factors.shape[1] / 2):]**2)**3,
-    'L1': lambda factors: torch.abs(factors),
-    'L2': lambda factors: (torch.sum(torch.abs(factors)**2))**1/2,
-    'F2': lambda factors: factors**2,
-}
-
 class Regularizer(nn.Module, ABC):
     @abstractmethod
     def forward(self, factors: Tuple[torch.Tensor]):
@@ -34,19 +26,43 @@ class N3(Regularizer):
         return norm / factors[0].shape[0]
 
 class TimeRegularizer(Regularizer, ABC):
-    def __init__(self, weight: float, norm: str, *args, **kwargs):
+    def __init__(self, weight: float, norm: Norm, *args, **kwargs):
         super(TimeRegularizer, self).__init__()
         self.weight = weight
-        self.norm = NORM[norm]
+        self.norm = norm
     @abstractmethod
     def time_regularize(self, factors: Tuple[torch.Tensor]):
         pass
 
     def forward(self, factors: Tuple[torch.Tensor]):
-        ddiff = self.time_regularize(factors)
-        diff = self.norm(ddiff)
-        return self.weight * torch.sum(diff) / (factors.shape[0] - 1)
+        diff = self.time_regularize(factors)
+        norm_diff = self.norm.forward(diff)
+        return self.weight * norm_diff / (factors.shape[0] - 1)
 
+
+class Norm(ABC):
+    @abstractmethod
+    def forward(self, factors: Tuple[torch.Tensor]):
+        pass
+
+class Lp(Norm):
+    def __init__(self, p: float):
+        super().__init__()
+        self.p = p
+
+    def forward(self, factors: Tuple[torch.Tensor]):
+        return sum(torch.sum(torch.abs(f) ** self.p) ** (1.0 / self.p)
+            for f in factors)
+
+class Np(Norm):
+    def __init__(self, p: float):
+        super().__init__()
+        self.p = p
+
+    def forward(self, factors: Tuple[torch.Tensor]):
+        return sum(
+            torch.sum(torch.abs(f) ** self.p)
+            for f in factors)
 class SmoothRegularizer(TimeRegularizer):
     def __init__(self, weight: float, norm: str):
         super(SmoothRegularizer, self).__init__(weight, norm)
@@ -62,19 +78,18 @@ class ExpDecayRegularizer(TimeRegularizer):
         super(ExpDecayRegularizer, self).__init__(weight, norm)
         self.decay_factor = decay_factor
     def time_regularize(self, factors: Tuple[torch.Tensor]):
-        ddiff = []
-        for i in range(len(factors)-1):
-            factor = factors[i+1]
-            aux = []
-            for j in range(i, -1, -1):
-                f = factors[j] * (1 - self.decay_factor) ** (i - j)
-                aux.append(f)
-            past_contrib = torch.sum(torch.stack(aux), dim=0)
-            ddiff.append(factor - past_contrib)
-        return torch.stack(ddiff)
+        num_t = factors.shape[0]
+        factor = factors[num_t-1]
+
+        aux = []
+        for j in range(num_t-2, -1, -1):
+            f = factors[j] * (1 - self.decay_factor) ** ((num_t-2)- j)
+            aux.append(f)
+        past_contrib = torch.sum(torch.stack(aux), dim=0)
+        return torch.stack([factor - past_contrib])
 
     def forward(self, factors: Tuple[torch.Tensor]):
-        return super().forward(factors)
+        return super().forward(factors) * (factors.shape[0]-1)
 
 """
 class Lambda3(Regularizer):
