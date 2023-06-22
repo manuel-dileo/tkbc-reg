@@ -32,16 +32,24 @@ def to_logfile(c, path):
 
 
 def main(argv):
-    hyp_space_1 = dict(
+    hyp_space = [ dict(
         rank=[5, 25, 50, 100, 500, 2000],
         emb_reg=[1e-1, 1e-2, 1e-3, 1e-4],
         time_reg_w=[1, 1e-1, 1e-2, 1e-3, 1e-4],
-        time_norm=['Np', 'Lp'],
+        time_norm=['Lp'],
         p_norm=[1, 2, 3, 4, 5],
         time_reg=['smooth']
-    )
+    ),
+    dict(
+        rank = [5, 25, 50, 100, 500, 2000],
+        emb_reg = [1e-1, 1e-2, 1e-3, 1e-4],
+        time_reg_w = [1, 1e-1, 1e-2, 1e-3, 1e-4],
+        time_norm = ['Np'],
+        p_norm = [1, 2, 3, 4, 5],
+        time_reg = ['smooth']
+    )]
 
-    configurations = list(cartesian_product(hyp_space_1))
+    configurations = list(cartesian_product(hyp_space[argv[1]]))
 
     path = 'logs/icews15'
 
