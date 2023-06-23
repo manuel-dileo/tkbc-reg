@@ -32,7 +32,7 @@ def to_logfile(c, path):
 
 
 def main(argv):
-    hyp_space = [ dict(
+    hyp_space = [dict(
         rank=[5, 25, 50, 100, 500, 2000],
         emb_reg=[1e-1, 1e-2, 1e-3, 1e-4],
         time_reg_w=[1, 1e-1, 1e-2, 1e-3, 1e-4],
@@ -49,7 +49,7 @@ def main(argv):
         time_reg = ['smooth']
     )]
 
-    configurations = list(cartesian_product(hyp_space[argv[1]]))
+    configurations = list(cartesian_product(hyp_space[argv[0]]))
 
     path = 'logs/icews15'
 
