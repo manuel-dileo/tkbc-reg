@@ -49,7 +49,7 @@ def main(argv):
             time_reg=['smooth']
         )]
 
-    configurations = list(cartesian_product(hyp_space[argv[0]]))
+    configurations = list(cartesian_product(hyp_space[int(argv[0])]))
 
     path = 'logs/icews14'
 
