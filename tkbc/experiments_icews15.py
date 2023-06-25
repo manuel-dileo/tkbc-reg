@@ -65,7 +65,7 @@ def main(argv):
 
         completed = False
         if os.path.isfile(logfilefromhere):
-            with open(logfile, 'r', encoding='utf-8', errors='ignore') as f:
+            with open(logfilefromhere, 'r', encoding='utf-8', errors='ignore') as f:
                 #content = f.read()
                 #completed = ('Training finished' in content) or ('Loss is nan: nan' in content)
                 for line in f: pass
