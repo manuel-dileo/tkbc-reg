@@ -68,6 +68,7 @@ def main(argv):
                 #completed = ('Training finished' in content) or ('Loss is nan: nan' in content)
                 for line in f: pass
                 completed= 'train:' in line
+                print(line, completed)
 
         if not completed:
             cmd = to_cmd(cfg)
