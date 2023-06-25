@@ -52,6 +52,7 @@ def main(argv):
     configurations = list(cartesian_product(hyp_space[int(argv[0])]))
 
     path = 'logs/icews15'
+    path_from_here = 'scripts/logs/icews15'
 
     # If the folder that will contain logs does not exist, create it
     #if not os.path.exists(path):
@@ -60,15 +61,15 @@ def main(argv):
     command_lines = set()
     for cfg in configurations:
         logfile = to_logfile(cfg, path)
+        logfilefromhere = to_logfile(cfg, path_from_here)
 
         completed = False
-        if os.path.isfile(logfile):
+        if os.path.isfile(logfilefromhere):
             with open(logfile, 'r', encoding='utf-8', errors='ignore') as f:
                 #content = f.read()
                 #completed = ('Training finished' in content) or ('Loss is nan: nan' in content)
                 for line in f: pass
                 completed= 'train:' in line
-                print(line, completed)
 
         if not completed:
             cmd = to_cmd(cfg)
