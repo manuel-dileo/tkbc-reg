@@ -2,7 +2,6 @@ import os
 import csv
 import sys
 import random
-import pandas as pd
 
 # Function to read the CSV, TSV, or TXT file
 def read_file(file_name):
