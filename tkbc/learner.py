@@ -8,7 +8,7 @@ from torch import optim
 
 from datasets import TemporalDataset
 from optimizers import TKBCOptimizer, IKBCOptimizer
-from models import ComplEx, TComplEx, TNTComplEx
+from models import ComplEx, TComplEx, TNTComplEx, TComplExGRU
 from regularizers import N3, SmoothRegularizer, ExpDecayRegularizer, Np, Lp, Norm
 
 parser = argparse.ArgumentParser(
@@ -84,6 +84,7 @@ sizes = dataset.get_shape()
 model = {
     'ComplEx': ComplEx(sizes, args.rank),
     'TComplEx': TComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
+    'TComplExGRU': TComplExGRU(sizes, args.rank, no_time_emb=args.no_time_emb),
     'TNTComplEx': TNTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
 }[args.model]
 model = model.cuda()
