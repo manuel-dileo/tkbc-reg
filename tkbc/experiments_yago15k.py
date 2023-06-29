@@ -52,7 +52,7 @@ def main(argv):
     configurations = list(cartesian_product(hyp_space[int(argv[0])]))
 
     path = 'logs/yago15k'
-    path_from_here = 'scripts/logs/icews15'
+    path_from_here = 'scripts/logs/yago15k'
 
     # If the folder that will contain logs does not exist, create it
     #if not os.path.exists(path):
