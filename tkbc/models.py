@@ -328,12 +328,12 @@ class TComplEx(TKBCModel):
             lhs[0] * rel[0] * time[1] - lhs[1] * rel[1] * time[1]
         ], 1)
 
-class TComplExGRU(TKBCModel):
+class TComplExRNN(TKBCModel):
     def __init__(
             self, sizes: Tuple[int, int, int, int], rank: int,
-            no_time_emb=False, init_size: float = 1e-2
+            no_time_emb=False, init_size: float = 1e-2, model: str = 'GRU'
     ):
-        super(TComplExGRU, self).__init__()
+        super(TComplExRNN, self).__init__()
         self.sizes = sizes
         self.rank = rank
 
@@ -345,7 +345,8 @@ class TComplExGRU(TKBCModel):
         self.embeddings[1].weight.data *= init_size
         self.embeddings[2].weight.data *= init_size
 
-        self.time_regularizer = nn.GRUCell(2 * rank, 2 * rank)
+        if model == 'GRU':
+            self.time_regularizer = nn.GRUCell(2 * rank, 2 * rank)
 
         self.no_time_emb = no_time_emb
 
