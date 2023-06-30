@@ -120,7 +120,7 @@ if __name__ == "__main__":
             )
         except OSError as e:
             if e.errno == errno.EEXIST:
-                print(e
+                print(e)
                 print("File exists. skipping...")
             else:
                 raise
