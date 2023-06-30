@@ -45,7 +45,8 @@ def prepare_dataset(path, name):
     n_relations = len(relations)
     n_entities = len(entities)
 
-    os.makedirs(os.path.join(DATA_PATH, name))
+    os.makedirs(os.path.join(DATA_PATH, name), exist_ok=True)
+    os.remove(os.path.join(DATA_PATH, name, f))
     # write ent to id / rel to id
     for (dic, f) in zip([entities_to_id, relations_to_id, timestamps_to_id], ['ent_id', 'rel_id', 'ts_id']):
         ff = open(os.path.join(DATA_PATH, name, f), 'w+')
@@ -119,7 +120,7 @@ if __name__ == "__main__":
             )
         except OSError as e:
             if e.errno == errno.EEXIST:
-                print(e)
+                print(e
                 print("File exists. skipping...")
             else:
                 raise
