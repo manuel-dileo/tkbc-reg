@@ -328,47 +328,51 @@ class TComplEx(TKBCModel):
             lhs[0] * rel[0] * time[1] - lhs[1] * rel[1] * time[1]
         ], 1)
 
-class TComplExRNN(TKBCModel):
+class RTComplEx(TKBCModel):
     def __init__(
             self, sizes: Tuple[int, int, int, int], rank: int,
-            no_time_emb=False, init_size: float = 1e-2, model: str = 'GRU'
+            no_time_emb=False, init_size: float = 1e-2,
+            rnnmodel: str = 'GRU'
     ):
-        super(TComplExRNN, self).__init__()
+        super(RTComplEx, self).__init__()
         self.sizes = sizes
         self.rank = rank
 
         self.embeddings = nn.ModuleList([
             nn.Embedding(s, 2 * rank, sparse=True)
-            for s in [sizes[0], sizes[1], sizes[3]]
+            for s in [sizes[0], sizes[1]]
         ])
         self.embeddings[0].weight.data *= init_size
         self.embeddings[1].weight.data *= init_size
         self.embeddings[2].weight.data *= init_size
 
-        if model == 'GRU':
-            self.time_regularizer = nn.GRUCell(2 * rank, 2 * rank)
-
         self.no_time_emb = no_time_emb
+
+        self.ntimestamps = sizes[3]
+
+        if rnnmodel == 'GRU':
+            self.rnn = GRU(2 * rank, 2 * rank)
 
     @staticmethod
     def has_time():
         return True
 
-    def time_regularize(self, factors: Tuple[torch.Tensor]):
-        output = []
-        input = factors[0]
-        hx = self.time_regularizer(input)
-        output.append(hx)
-        for factor in factors[1:]:
-            hx = self.time_regularizer(factor, hx)
-            output.append(hx)
-        return torch.stack(output)
+    def set_ntimestamps(self, ntimestamps: int):
+        self.ntimestamps = ntimestamps
+
+    def time_regularize(self):
+        sequence_length = self.ntimestamps
+        input = torch.zeros(sequence_length, 2 * self.rank)
+        h0 = torch.randn(1, 2 * self.rank)
+        output, _ = rnn(input, h0)
+        return output
+
     def score(self, x):
         lhs = self.embeddings[0](x[:, 0])
         rel = self.embeddings[1](x[:, 1])
         rhs = self.embeddings[0](x[:, 2])
-        time = self.embeddings[2](x[:, 3])
-        time = self.time_regularize(time)
+        #time = self.embeddings[2](x[:, 3])
+        time = self.time_regularize()(x[:, 3])
 
         lhs = lhs[:, :self.rank], lhs[:, self.rank:]
         rel = rel[:, :self.rank], rel[:, self.rank:]
@@ -387,8 +391,8 @@ class TComplExRNN(TKBCModel):
         lhs = self.embeddings[0](x[:, 0])
         rel = self.embeddings[1](x[:, 1])
         rhs = self.embeddings[0](x[:, 2])
-        time = self.embeddings[2](x[:, 3])
-        time = self.time_regularize(time)
+        # time = self.embeddings[2](x[:, 3])
+        time = self.time_regularize()(x[:, 3])
 
         lhs = lhs[:, :self.rank], lhs[:, self.rank:]
         rel = rel[:, :self.rank], rel[:, self.rank:]
@@ -414,8 +418,8 @@ class TComplExRNN(TKBCModel):
         lhs = self.embeddings[0](x[:, 0])
         rel = self.embeddings[1](x[:, 1])
         rhs = self.embeddings[0](x[:, 2])
-        time = self.embeddings[2].weight
-        time = self.time_regularize(time)
+        #time = self.embeddings[2](x[:, 3])
+        time = self.time_regularize()(x[:, 3])
 
         lhs = lhs[:, :self.rank], lhs[:, self.rank:]
         rel = rel[:, :self.rank], rel[:, self.rank:]
@@ -437,8 +441,9 @@ class TComplExRNN(TKBCModel):
     def get_queries(self, queries: torch.Tensor):
         lhs = self.embeddings[0](queries[:, 0])
         rel = self.embeddings[1](queries[:, 1])
-        time = self.embeddings[2](queries[:, 3])
-        time = self.time_regularize(time)
+        #time = self.embeddings[2](x[:, 3])
+        time = self.time_regularize()(x[:, 3])
+
         lhs = lhs[:, :self.rank], lhs[:, self.rank:]
         rel = rel[:, :self.rank], rel[:, self.rank:]
         time = time[:, :self.rank], time[:, self.rank:]

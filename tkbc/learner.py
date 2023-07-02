@@ -19,7 +19,7 @@ parser.add_argument(
     help="Dataset name"
 )
 models = [
-    'ComplEx', 'TComplEx', 'TNTComplEx'
+    'ComplEx', 'TComplEx', 'TNTComplEx', 'RTComplEx'
 ]
 parser.add_argument(
     '--model', choices=models,
@@ -84,7 +84,7 @@ sizes = dataset.get_shape()
 model = {
     'ComplEx': ComplEx(sizes, args.rank),
     'TComplEx': TComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
-    'TComplExRNN': TComplExRNN(sizes, args.rank, no_time_emb=args.no_time_emb),
+    'RTComplEx': RTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
     'TNTComplEx': TNTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
 }[args.model]
 model = model.cuda()
