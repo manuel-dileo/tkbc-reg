@@ -357,9 +357,6 @@ class RTComplEx(TKBCModel):
     def has_time():
         return True
 
-    def set_ntimestamps(self, ntimestamps: int):
-        self.ntimestamps = ntimestamps
-
     def time_regularize(self):
         sequence_length = self.ntimestamps
         input = torch.zeros(sequence_length, 2 * self.rank)

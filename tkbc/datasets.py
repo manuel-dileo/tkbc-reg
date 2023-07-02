@@ -26,13 +26,17 @@ class TemporalDataset(object):
             self.data[f] = pickle.load(in_file)
 
         maxis = np.max(self.data['train'], axis=0)
+        maxis_val = np.max(self.data['valid'], axis=0)
+        maxis_test = np.max(self.data['test'], axis=0)
         self.n_entities = int(max(maxis[0], maxis[2]) + 1)
         self.n_predicates = int(maxis[1] + 1)
         self.n_predicates *= 2
         if maxis.shape[0] > 4:
-            self.n_timestamps = max(int(maxis[3] + 1), int(maxis[4] + 1))
+            self.n_timestamps = max(int(maxis[3] + 1), int(maxis[4] + 1),\
+                                    int(maxis_val[3] + 1), int(maxis_val[4] + 1),\
+                                    int(maxis_test[3] + 1), int(maxis_test[4] + 1))
         else:
-            self.n_timestamps = int(maxis[3] + 1)
+            self.n_timestamps = max(int(maxis[3] + 1), int(maxis_val[3] + 1), int(maxis_test[3] + 1))
         try:
             inp_f = open(str(self.root / f'ts_diffs.pickle'), 'rb')
             self.time_diffs = torch.from_numpy(pickle.load(inp_f)).cuda().float()
