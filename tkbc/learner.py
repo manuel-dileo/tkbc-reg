@@ -25,6 +25,14 @@ parser.add_argument(
     '--model', choices=models,
     help="Model in {}".format(models)
 )
+
+rnns = ['GRU','RNN','LSTM']
+
+parser.add_argument(
+    '--rnn', choices=rnns, default='GRU',
+    help="Model in {}".format(models)
+)
+
 parser.add_argument(
     '--max_epochs', default=50, type=int,
     help="Number of epochs."
