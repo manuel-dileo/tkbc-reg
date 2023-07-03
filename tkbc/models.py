@@ -352,6 +352,10 @@ class RTComplEx(TKBCModel):
 
         if rnnmodel == 'GRU':
             self.rnn = nn.GRU(2 * rank, 2 * rank)
+        elif rnnmodel == 'LSTM':
+            self.rnn = nn.LSTM(2 * rank, 2 * rank)
+        elif rnnmodel == 'RNN':
+            self.rnn = nn.RNN(2 * rank, 2 * rank)
 
         self.h0 = torch.randn(1, 1, 2 * self.rank).cuda()
         self.rnn_input = torch.randn(self.ntimestamps, 1, 2 * self.rank).cuda()
