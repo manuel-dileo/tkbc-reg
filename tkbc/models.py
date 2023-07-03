@@ -362,7 +362,7 @@ class RTComplEx(TKBCModel):
     def time_regularize(self):
         sequence_length = self.ntimestamps
         input = torch.zeros(sequence_length, 2 * self.rank)
-        output, _ = rnn(input, self.h0)
+        output, _ = self.rnn(input, self.h0)
         return output
 
     def score(self, x):
