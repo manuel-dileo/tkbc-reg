@@ -30,8 +30,8 @@ def drop_columns(data, file_name):
         # Drop column relate to edge weight
         data = [row[:2] + row[3:] for row in data]
     elif "reddit" in file_name:
-        # Drop the first row (header) + LINK_SENTIMENT and PROPERTIES columns
-        data = [row[:3] for row in data[1:]]
+        # Drop the first row (header) + POST_ID + LINK_SENTIMENT and PROPERTIES columns
+        data = [row[:2] + [row[3]] for row in data[1:]]
 
     return data
 

@@ -15,11 +15,11 @@ fi
 perform_time_split() {
     # Time-based split logic here
     echo "Performing time-based split..."
-    python split_roland_data.py src_data/bitcoinalpha/bitcoinalpha.csv 95 13 --split time
-    python split_roland_data.py src_data/bitcoinotc/bitcoinotc.csv 95 14 --split time
-    python split_roland_data.py src_data/collegemsg/CollegeMsg.txt 62 9 --split time
-    python split_roland_data.py src_data/reddit-body/reddit-body.tsv 122 18 --split time
-    python split_roland_data.py src_data/reddit-title/reddit-title.tsv 122 18 --split time
+    python split_roland_data.py src_data/bitcoinalpha/bitcoinalpha.csv 70 10 --split time
+    python split_roland_data.py src_data/bitcoinotc/bitcoinotc.csv 70 10 --split time
+    python split_roland_data.py src_data/collegemsg/CollegeMsg.txt 70 10 --split time
+    python split_roland_data.py src_data/reddit-body/reddit-body.tsv 70 10 --split time
+    python split_roland_data.py src_data/reddit-title/reddit-title.tsv 70 10 --split time
 }
 
 # Function to perform random split
