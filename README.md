@@ -1,3 +1,4 @@
+# README REFERS TO ORIGINAL REPO, IT CONTAINS OLD INFO, README UNDER CONSTRUCTION
 # Knowledge Base Completion (kbc)
 This code reproduces results in [Tensor Decompositions for Temporal Knowledge Base Completion](https://arxiv.org/abs/2004.04926) (ICLR 2020).
 
