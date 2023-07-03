@@ -344,7 +344,7 @@ class RTComplEx(TKBCModel):
         ])
         self.embeddings[0].weight.data *= init_size
         self.embeddings[1].weight.data *= init_size
-        self.embeddings[2].weight.data *= init_size
+        #self.embeddings[2].weight.data *= init_size
 
         self.no_time_emb = no_time_emb
 
