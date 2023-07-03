@@ -410,7 +410,7 @@ class RTComplEx(TKBCModel):
                    torch.sqrt(lhs[0] ** 2 + lhs[1] ** 2),
                    torch.sqrt(full_rel[0] ** 2 + full_rel[1] ** 2),
                    torch.sqrt(rhs[0] ** 2 + rhs[1] ** 2)
-               ), self.embeddings[2].weight[:-1] if self.no_time_emb else self.embeddings[2].weight
+               ), torch.zeros(self.ntimestamps, 2 * self.rank)
 
     def forward_over_time(self, x):
         lhs = self.embeddings[0](x[:, 0])
