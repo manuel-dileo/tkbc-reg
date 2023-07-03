@@ -370,7 +370,6 @@ class RTComplEx(TKBCModel):
         rel = self.embeddings[1](x[:, 1])
         rhs = self.embeddings[0](x[:, 2])
         #time = self.embeddings[2](x[:, 3])
-        print(x[:, 3])
         time = self.time_regularize()(x[:, 3])
 
         lhs = lhs[:, :self.rank], lhs[:, self.rank:]
@@ -391,6 +390,7 @@ class RTComplEx(TKBCModel):
         rel = self.embeddings[1](x[:, 1])
         rhs = self.embeddings[0](x[:, 2])
         # time = self.embeddings[2](x[:, 3])
+        print(x[:, 3])
         time = self.time_regularize()(x[:, 3])
 
         lhs = lhs[:, :self.rank], lhs[:, self.rank:]
