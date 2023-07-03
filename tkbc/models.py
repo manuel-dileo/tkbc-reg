@@ -439,8 +439,8 @@ class RTComplEx(TKBCModel):
     def get_queries(self, queries: torch.Tensor):
         lhs = self.embeddings[0](queries[:, 0])
         rel = self.embeddings[1](queries[:, 1])
-        #time = self.embeddings[2](x[:, 3])
-        time = self.time_regularize()[x[:, 3]]
+        #time = self.embeddings[2](queries[:, 3])
+        time = self.time_regularize()[queries[:, 3]]
 
         lhs = lhs[:, :self.rank], lhs[:, self.rank:]
         rel = rel[:, :self.rank], rel[:, self.rank:]
