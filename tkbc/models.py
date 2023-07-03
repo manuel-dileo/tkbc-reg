@@ -353,7 +353,8 @@ class RTComplEx(TKBCModel):
         if rnnmodel == 'GRU':
             self.rnn = nn.GRU(2 * rank, 2 * rank)
 
-        self.h0 = torch.randn(1, 1, 2 * self.rank)
+        self.h0 = torch.randn(1, 1, 2 * self.rank).cuda()
+        self.rnn_input = torch.randn(self.ntimestamps, 1, 2 * self.rank).cuda()
 
     @staticmethod
     def has_time():
@@ -361,9 +362,9 @@ class RTComplEx(TKBCModel):
 
     def time_regularize(self):
         sequence_length = self.ntimestamps
-        input = torch.zeros(sequence_length, 1, 2 * self.rank).cuda()
-        output, _ = self.rnn(input, self.h0.cuda())
-        return torch.squeeze(output)
+        output, _ = self.rnn(self.rnn_input, self.h0)
+        output = torch.squeeze(output)
+        return output
 
     def score(self, x):
         lhs = self.embeddings[0](x[:, 0])
