@@ -351,7 +351,7 @@ class RTComplEx(TKBCModel):
         self.ntimestamps = sizes[3]
 
         if rnnmodel == 'GRU':
-            self.rnn = GRU(2 * rank, 2 * rank)
+            self.rnn = nn.GRU(2 * rank, 2 * rank)
 
         self.h0 = torch.randn(1, 2 * self.rank)
 
