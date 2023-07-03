@@ -353,7 +353,7 @@ class RTComplEx(TKBCModel):
         if rnnmodel == 'GRU':
             self.rnn = nn.GRU(2 * rank, 2 * rank)
 
-        self.h0 = torch.randn(1, 2 * self.rank)
+        self.h0 = torch.randn(1, 1, 2 * self.rank)
 
     @staticmethod
     def has_time():
@@ -361,16 +361,16 @@ class RTComplEx(TKBCModel):
 
     def time_regularize(self):
         sequence_length = self.ntimestamps
-        input = torch.zeros(sequence_length, 2 * self.rank)
+        input = torch.zeros(sequence_length, 1, 2 * self.rank)
         output, _ = self.rnn(input, self.h0)
-        return output
+        return torch.squeeze(output)
 
     def score(self, x):
         lhs = self.embeddings[0](x[:, 0])
         rel = self.embeddings[1](x[:, 1])
         rhs = self.embeddings[0](x[:, 2])
         #time = self.embeddings[2](x[:, 3])
-        time = self.time_regularize()(x[:, 3])
+        time = self.time_regularize()[x[:, 3]]
 
         lhs = lhs[:, :self.rank], lhs[:, self.rank:]
         rel = rel[:, :self.rank], rel[:, self.rank:]
@@ -390,8 +390,7 @@ class RTComplEx(TKBCModel):
         rel = self.embeddings[1](x[:, 1])
         rhs = self.embeddings[0](x[:, 2])
         # time = self.embeddings[2](x[:, 3])
-        print(x[:, 3])
-        time = self.time_regularize()(x[:, 3])
+        time = self.time_regularize()[x[:, 3]]
 
         lhs = lhs[:, :self.rank], lhs[:, self.rank:]
         rel = rel[:, :self.rank], rel[:, self.rank:]
@@ -418,7 +417,7 @@ class RTComplEx(TKBCModel):
         rel = self.embeddings[1](x[:, 1])
         rhs = self.embeddings[0](x[:, 2])
         #time = self.embeddings[2](x[:, 3])
-        time = self.time_regularize()(x[:, 3])
+        time = self.time_regularize()[x[:, 3]]
 
         lhs = lhs[:, :self.rank], lhs[:, self.rank:]
         rel = rel[:, :self.rank], rel[:, self.rank:]
@@ -441,7 +440,7 @@ class RTComplEx(TKBCModel):
         lhs = self.embeddings[0](queries[:, 0])
         rel = self.embeddings[1](queries[:, 1])
         #time = self.embeddings[2](x[:, 3])
-        time = self.time_regularize()(x[:, 3])
+        time = self.time_regularize()[x[:, 3]]
 
         lhs = lhs[:, :self.rank], lhs[:, self.rank:]
         rel = rel[:, :self.rank], rel[:, self.rank:]
