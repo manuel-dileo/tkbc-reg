@@ -332,7 +332,7 @@ class RTComplEx(TKBCModel):
     def __init__(
             self, sizes: Tuple[int, int, int, int], rank: int,
             no_time_emb=False, init_size: float = 1e-2,
-            rnnmodel: str = 'GRU', rnn_hidden_size: int = 100
+            rnnmodel: str = 'GRU', rnn_hidden_size: int = 10
     ):
         super(RTComplEx, self).__init__()
         self.sizes = sizes
