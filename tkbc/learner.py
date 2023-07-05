@@ -97,7 +97,7 @@ sizes = dataset.get_shape()
 model = {
     'ComplEx': ComplEx(sizes, args.rank),
     'TComplEx': TComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
-    'RTComplEx': RTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb, rnnmodel=args.rnn, rnn_hidden_size=int(args.rnn_size)),
+    'RTComplEx': RTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb, rnnmodel=args.rnn, rnn_size=int(args.rnn_size)),
     'TNTComplEx': TNTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
 }[args.model]
 model = model.cuda()
