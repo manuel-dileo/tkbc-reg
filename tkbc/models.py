@@ -332,7 +332,7 @@ class RTComplEx(TKBCModel):
     def __init__(
             self, sizes: Tuple[int, int, int, int], rank: int,
             no_time_emb=False, init_size: float = 1e-2,
-            rnnmodel: str = 'GRU', rnn_hidden_size: int = 10
+            rnnmodel: str = 'GRU', rnn_size: int = 10
     ):
         super(RTComplEx, self).__init__()
         self.sizes = sizes
@@ -351,14 +351,14 @@ class RTComplEx(TKBCModel):
         self.ntimestamps = sizes[3]
 
         if rnnmodel == 'GRU':
-            self.rnn = nn.GRU(2 * rank, rnn_hidden_size)
-            self.post_rnn = nn.Linear(rnn_hidden_size, 2*rank)
+            self.rnn = nn.GRU(rnn_size, rnn_size)
+            self.post_rnn = nn.Linear(rnn_size, 2 * rank)
         elif rnnmodel == 'LSTM':
-            self.rnn = nn.LSTM(2 * rank, rnn_hidden_size)
-            self.post_rnn = nn.Linear(rnn_hidden_size, 2 * rank)
+            self.rnn = nn.LSTM(rnn_size, rnn_size)
+            self.post_rnn = nn.Linear(rnn_size, 2 * rank)
         elif rnnmodel == 'RNN':
-            self.rnn = nn.RNN(2 * rank, rnn_hidden_size)
-            self.post_rnn = nn.Linear(rnn_hidden_size, 2 * rank)
+            self.rnn = nn.RNN(rnn_size, rnn_size)
+            self.post_rnn = nn.Linear(rnn_size, 2 * rank)
 
         self.h0 = nn.Parameter(torch.randn(1, 1, 2 * self.rank)).cuda()
         self.rnn_input = torch.zeros(self.ntimestamps, 1, 2 * self.rank).cuda()
