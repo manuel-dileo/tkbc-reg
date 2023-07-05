@@ -362,7 +362,7 @@ class RTComplEx(TKBCModel):
             self.post_rnn = nn.Linear(rnn_size, 2 * rank)
 
         self.h0 = nn.Parameter(torch.randn(1, 1, rnn_size))
-        self.rnn_input = torch.zeros(self.ntimestamps, 1, rnn_size)
+        self.rnn_input = nn.Parameter(torch.zeros(self.ntimestamps, 1, rnn_size), requires_grad=False)
         self.rnnmodel = rnnmodel
 
     @staticmethod
