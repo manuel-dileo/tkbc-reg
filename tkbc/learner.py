@@ -34,6 +34,11 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    '--rnn_size', default=10,
+    help="RNN output size"
+)
+
+parser.add_argument(
     '--max_epochs', default=50, type=int,
     help="Number of epochs."
 )
@@ -92,7 +97,7 @@ sizes = dataset.get_shape()
 model = {
     'ComplEx': ComplEx(sizes, args.rank),
     'TComplEx': TComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
-    'RTComplEx': RTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
+    'RTComplEx': RTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb, rnnmodel=args.rnn, rnn_hidden_size=args.rnn_size),
     'TNTComplEx': TNTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
 }[args.model]
 model = model.cuda()
