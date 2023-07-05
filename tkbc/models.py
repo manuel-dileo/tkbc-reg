@@ -355,6 +355,7 @@ class RTComplEx(TKBCModel):
             self.post_rnn = nn.Linear(rnn_size, 2 * rank)
         elif rnnmodel == 'LSTM':
             self.rnn = nn.LSTM(rnn_size, rnn_size)
+            self.c0 = nn.Parameter(torch.randn(1, 1, rnn_size)).cuda()
             self.post_rnn = nn.Linear(rnn_size, 2 * rank)
         elif rnnmodel == 'RNN':
             self.rnn = nn.RNN(rnn_size, rnn_size)
@@ -362,12 +363,15 @@ class RTComplEx(TKBCModel):
 
         self.h0 = nn.Parameter(torch.randn(1, 1, rnn_size)).cuda()
         self.rnn_input = torch.zeros(self.ntimestamps, 1, rnn_size).cuda()
+        self.rnnmodel = rnnmodel
 
     @staticmethod
     def has_time():
         return True
 
     def time_regularize(self):
+        if self.rnnmodel == "LSTM":
+            output, _ = self.rnn(self.rnn_input, (self.h0, self.c0))
         output, _ = self.rnn(self.rnn_input, self.h0)
         output = torch.squeeze(output)
         output = self.post_rnn(output)
