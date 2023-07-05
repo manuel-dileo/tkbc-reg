@@ -360,8 +360,8 @@ class RTComplEx(TKBCModel):
             self.rnn = nn.RNN(rnn_size, rnn_size)
             self.post_rnn = nn.Linear(rnn_size, 2 * rank)
 
-        self.h0 = nn.Parameter(torch.randn(1, 1, 2 * self.rank)).cuda()
-        self.rnn_input = torch.zeros(self.ntimestamps, 1, 2 * self.rank).cuda()
+        self.h0 = nn.Parameter(torch.randn(1, 1, rnn_size)).cuda()
+        self.rnn_input = torch.zeros(self.ntimestamps, 1, rnn_size).cuda()
 
     @staticmethod
     def has_time():
