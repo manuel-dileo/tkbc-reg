@@ -370,9 +370,10 @@ class RTComplEx(TKBCModel):
         return True
 
     def time_regularize(self):
-        if self.rnnmodel == "LSTM":
+        if self.rnnmodel == 'LSTM':
             output, _ = self.rnn(self.rnn_input, (self.h0, self.c0))
-        output, _ = self.rnn(self.rnn_input, self.h0)
+        else:
+            output, _ = self.rnn(self.rnn_input, self.h0)
         output = torch.squeeze(output)
         output = self.post_rnn(output)
         return output
