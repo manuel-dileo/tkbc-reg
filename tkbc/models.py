@@ -332,7 +332,7 @@ class RTComplEx(TKBCModel):
     def __init__(
             self, sizes: Tuple[int, int, int, int], rank: int,
             no_time_emb=False, init_size: float = 1e-2,
-            rnnmodel: str = 'GRU'
+            rnnmodel: str = 'GRU', rnn_hidden_size: int = 100
     ):
         super(RTComplEx, self).__init__()
         self.sizes = sizes
@@ -351,23 +351,26 @@ class RTComplEx(TKBCModel):
         self.ntimestamps = sizes[3]
 
         if rnnmodel == 'GRU':
-            self.rnn = nn.GRU(2 * rank, 2 * rank)
+            self.rnn = nn.GRU(2 * rank, rnn_hidden_size)
+            self.post_rnn = nn.Linear(rnn_hidden_size, 2*rank)
         elif rnnmodel == 'LSTM':
-            self.rnn = nn.LSTM(2 * rank, 2 * rank)
+            self.rnn = nn.LSTM(2 * rank, rnn_hidden_size)
+            self.post_rnn = nn.Linear(rnn_hidden_size, 2 * rank)
         elif rnnmodel == 'RNN':
-            self.rnn = nn.RNN(2 * rank, 2 * rank)
+            self.rnn = nn.RNN(2 * rank, rnn_hidden_size)
+            self.post_rnn = nn.Linear(rnn_hidden_size, 2 * rank)
 
-        self.h0 = torch.randn(1, 1, 2 * self.rank).cuda()
-        self.rnn_input = torch.randn(self.ntimestamps, 1, 2 * self.rank).cuda()
+        self.h0 = nn.Parameter(torch.randn(1, 1, 2 * self.rank)).cuda()
+        self.rnn_input = torch.zeros(self.ntimestamps, 1, 2 * self.rank).cuda()
 
     @staticmethod
     def has_time():
         return True
 
     def time_regularize(self):
-        sequence_length = self.ntimestamps
         output, _ = self.rnn(self.rnn_input, self.h0)
         output = torch.squeeze(output)
+        output = self.post_rnn(output)
         return output
 
     def score(self, x):
