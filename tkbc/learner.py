@@ -26,7 +26,7 @@ parser.add_argument(
     help="Model in {}".format(models)
 )
 
-rnns = ['GRU','RNN','LSTM']
+rnns = ['GRU','RNN','LSTM', 'LinRNN']
 
 parser.add_argument(
     '--rnn', choices=rnns, default='GRU',

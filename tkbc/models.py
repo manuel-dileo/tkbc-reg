@@ -7,6 +7,7 @@ import math
 import torch
 from torch import nn
 import numpy as np
+from lin_rnn import LinRNN
 
 
 class TKBCModel(nn.Module, ABC):
@@ -352,15 +353,15 @@ class RTComplEx(TKBCModel):
 
         if rnnmodel == 'GRU':
             self.rnn = nn.GRU(rnn_size, rnn_size)
-            self.post_rnn = nn.Linear(rnn_size, 2 * rank)
         elif rnnmodel == 'LSTM':
             self.rnn = nn.LSTM(rnn_size, rnn_size)
             self.c0 = nn.Parameter(torch.randn(1, 1, rnn_size))
-            self.post_rnn = nn.Linear(rnn_size, 2 * rank)
         elif rnnmodel == 'RNN':
             self.rnn = nn.RNN(rnn_size, rnn_size)
-            self.post_rnn = nn.Linear(rnn_size, 2 * rank)
+        elif rnnmodel == 'LinRNN':
+            self.rnn = LinRNN(rnn_size, rnn_size)
 
+        self.post_rnn = nn.Linear(rnn_size, 2 * rank)
         self.h0 = nn.Parameter(torch.randn(1, 1, rnn_size))
         self.rnn_input = nn.Parameter(torch.zeros(self.ntimestamps, 1, rnn_size), requires_grad=False)
         self.rnnmodel = rnnmodel
