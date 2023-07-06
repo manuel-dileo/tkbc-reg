@@ -1,4 +1,5 @@
 import torch
+from torch import nn
 class LinRNN(nn.Module):
     """
     Basic linear RNN block. This represents a single layer of linear RNN
@@ -12,7 +13,6 @@ class LinRNN(nn.Module):
         super().__init__()
         self.input_size = input_size
         self.hidden_size = hidden_size
-        self.output_size = output_size
         self.i2h = nn.Linear(input_size, hidden_size, bias=False)
         self.h2h = nn.Linear(hidden_size, hidden_size)
 
