@@ -1,5 +1,7 @@
 import torch
 from torch import nn
+from typing import Tuple, List, Dict
+
 class LinRNN(nn.Module):
     """
     Basic linear RNN block. This represents a single layer of linear RNN
@@ -16,7 +18,7 @@ class LinRNN(nn.Module):
         self.i2h = nn.Linear(input_size, hidden_size, bias=False)
         self.h2h = nn.Linear(hidden_size, hidden_size)
 
-    def forward(self, x, hidden_state) -> tuple[torch.Tensor, torch.Tensor]:
+    def forward(self, x, hidden_state) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Returns computed output and lin(i2h + h2h).
         Returns follows pytorch RNN standard: output contains the hidden_state matrix, hn the last hidden_state.
