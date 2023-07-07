@@ -25,6 +25,20 @@ class N3(Regularizer):
             norm += self.weight * torch.sum(torch.abs(f) ** 3)
         return norm / factors[0].shape[0]
 
+class L2(Regularizer):
+    """
+    L2 regularizer for embeddings (no time regularization)
+    """
+    def __init__(self, weight: float):
+        super(L2, self).__init__()
+        self.weight = weight
+
+    def forward(self, factors):
+        norm = 0
+        for f in factors:
+            norm += self.weight * (torch.abs(f) ** 2)**1/2
+        return norm / factors[0].shape[0]
+
 class Norm(ABC):
     @abstractmethod
     def forward(self, factors: Tuple[torch.Tensor]):
