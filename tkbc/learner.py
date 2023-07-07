@@ -60,13 +60,13 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    '--emb_reg_w', default=0., type=float,
+    '--emb_reg', default=0., type=float,
     help="Embedding regularizer strength"
 )
 
 parser.add_argument(
-    '--time_reg', default='N3', type=str,
-    help='Type of time regularizer [smooth, expdecay]'
+    '--emb_reg_type', default='N3', type=str,
+    help='Type of emb regularizer [N3, L2]'
 )
 
 parser.add_argument(
