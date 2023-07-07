@@ -36,7 +36,7 @@ class L2(Regularizer):
     def forward(self, factors):
         norm = 0
         for f in factors:
-            norm += self.weight * (torch.abs(f) ** 2)**1/2
+            norm += self.weight * torch.sum((torch.abs(f) ** 2)**1/2)
         return norm / factors[0].shape[0]
 
 class Norm(ABC):
