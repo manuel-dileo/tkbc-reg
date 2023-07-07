@@ -111,8 +111,8 @@ model = model.cuda()
 opt = optim.Adagrad(model.parameters(), lr=args.learning_rate)
 
 emb_reg = {
-    'N3': N3(args.emb_reg_w)
-}[args.emb_reg]
+    'N3': N3(args.emb_reg)
+}[args.emb_reg_type]
 
 norm = {
     'Lp': Lp(args.p_norm),
