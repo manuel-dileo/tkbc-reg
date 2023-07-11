@@ -117,7 +117,7 @@ emb_reg = {
 
 norm = {
     'Lp': Lp(args.p_norm),
-    'Np': Np(args.p_norm)
+    'Np': Np(args.p_norm),
 }[args.time_norm]
 
 time_reg = {
