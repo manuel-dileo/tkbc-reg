@@ -54,6 +54,7 @@ class ChronoR(TKBCModel):
         return True
 
     def score(self, x):
+        #score : <lhs hadamard [rel|time], rhs>
         lhs = self.embeddings[0](x[:, 0])
         rel = self.embeddings[1](x[:, 1])
         rhs = self.embeddings[0](x[:, 2])
@@ -72,7 +73,7 @@ class ChronoR(TKBCModel):
 
         hrt = hadamard_complex(lhs[0], lhs[1], rt[0], rt[1])
 
-        return torch.sum(sum(hadamard_complex(hrt[0],hrt[1],rhs[0],rhs[1])))
+        return torch.sum(hrt[0]*rhs[0]+hrt[1]*rhs[1],1,keepdim=True)
     
     def forward(self, x):
         lhs = self.embeddings[0](x[:, 0])
@@ -82,9 +83,12 @@ class ChronoR(TKBCModel):
 
         lhs = lhs[:, :self.rank], lhs[:, self.rank:]
         rhs = rhs[:, :self.rank], rhs[:, self.rank:]
-
+        
+        # normalize phases so that they lie in [-pi,pi]
         rel = normalize_phases(rel)
+        # convert from radians to points on complex unix ball
         rel = torch.cos(rel), torch.sin(rel)
+        
         time = normalize_phases(time)
         time = torch.cos(time), torch.sin(time)
 
@@ -94,6 +98,8 @@ class ChronoR(TKBCModel):
 
         right = self.embeddings[0].weight
         right = right[:, :self.rank], right[:, self.rank:]
+        
+        #return predictions, factors, time
 
         return (
                        hrt[0] @ right[0].t() +
@@ -102,7 +108,7 @@ class ChronoR(TKBCModel):
                    torch.sqrt(lhs[0] ** 2 + lhs[1] ** 2),
                    torch.sqrt(rt[0] ** 2 + rt[1] ** 2),
                    torch.sqrt(rhs[0] ** 2 + rhs[1] ** 2)
-               ), sself.embeddings[2].weight[:-1] if self.no_time_emb else self.embeddings[2].weight
+               ), self.embeddings[2].weight[:-1] if self.no_time_emb else self.embeddings[2].weight
 
     def forward_over_time(self, x):
         lhs = self.embeddings[0](x[:, 0])
@@ -123,8 +129,8 @@ class ChronoR(TKBCModel):
         ht = hadamard_complex(lhs[0], lhs[1], rhs[0], rhs[1])
 
         return (
-                ht @ rt[0].t() +
-                ht @ rt[1].t()
+                ht[0] @ rt[0].t() +
+                ht[1] @ rt[1].t()
         )
 
     def get_rhs(self, chunk_begin: int, chunk_size: int):
