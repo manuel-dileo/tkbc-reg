@@ -72,7 +72,8 @@ class ChronoR(TKBCModel):
 
         hrt = hadamard_complex(lhs[0], lhs[1], rt[0], rt[1])
 
-        return torch.sum(hrt[0] * rhs[0] + hrt[1] * rhs[1])
+        return torch.sum(sum(hadamard_complex(hrt[0],hrt[1],rhs[0],rhs[1])))
+    
     def forward(self, x):
         lhs = self.embeddings[0](x[:, 0])
         rel = self.embeddings[1](x[:, 1])
@@ -101,7 +102,7 @@ class ChronoR(TKBCModel):
                    torch.sqrt(lhs[0] ** 2 + lhs[1] ** 2),
                    torch.sqrt(rt[0] ** 2 + rt[1] ** 2),
                    torch.sqrt(rhs[0] ** 2 + rhs[1] ** 2)
-               ), self.embeddings[2].weight[:-1] if self.no_time_emb else self.embeddings[2].weight
+               ), sself.embeddings[2].weight[:-1] if self.no_time_emb else self.embeddings[2].weight
 
     def forward_over_time(self, x):
         lhs = self.embeddings[0](x[:, 0])

@@ -9,6 +9,7 @@ from torch import optim
 from datasets import TemporalDataset
 from optimizers import TKBCOptimizer, IKBCOptimizer
 from models import ComplEx, TComplEx, TNTComplEx, RTComplEx
+from chronor import ChronoR
 from regularizers import N3, L2, SmoothRegularizer, ExpDecayRegularizer, Np, Lp, Norm
 
 parser = argparse.ArgumentParser(
@@ -19,7 +20,7 @@ parser.add_argument(
     help="Dataset name"
 )
 models = [
-    'ComplEx', 'TComplEx', 'TNTComplEx', 'RTComplEx'
+    'ComplEx', 'TComplEx', 'TNTComplEx', 'RTComplEx', 'ChronoR'
 ]
 parser.add_argument(
     '--model', choices=models,
@@ -105,6 +106,7 @@ model = {
     'TComplEx': TComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
     'RTComplEx': RTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb, rnnmodel=args.rnn, rnn_size=int(args.rnn_size)),
     'TNTComplEx': TNTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
+    'ChronoR': ChronoR(sizes, args.rank, no_time_emb = args.no_time_emb)
 }[args.model]
 model = model.cuda()
 
