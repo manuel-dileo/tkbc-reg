@@ -21,7 +21,7 @@ def summary(configuration):
 def to_cmd(c, _path=None):
     command = f'PYTHONPATH=. python3 ../learner.py '\
         f'--dataset ICEWS14 '\
-        f'--model TNTComplEx '\
+        f'--model {c["model"]} '\
         f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --time_reg {c["time_reg"]} --time_norm {c["time_norm"]} --time_reg_w {c["time_reg_w"]} --p_norm {c["p_norm"]}'
     return command
 
@@ -38,6 +38,7 @@ def main(argv):
         time_reg_w=[1, 1e-1, 1e-2, 1e-3, 1e-4],
         time_norm=['Lp'],
         p_norm=[1, 2, 3, 4, 5],
+        model=['ChronoR'],
         time_reg=['smooth']
     ),
         dict(
@@ -46,13 +47,14 @@ def main(argv):
             time_reg_w=[1, 1e-1, 1e-2, 1e-3, 1e-4],
             time_norm=['Np'],
             p_norm=[1, 2, 3, 4, 5],
+            model=['ChronoR'],
             time_reg=['smooth']
         )]
 
     configurations = list(cartesian_product(hyp_space[int(argv[0])]))
 
-    path = 'logs/icews14'
-    path_from_here = 'scripts/logs/icews14'
+    path = 'logs/chronoR/icews14'
+    path_from_here = 'scripts/logs/chronoR/icews14'
 
     # If the folder that will contain logs does not exist, create it
     #if not os.path.exists(path):
