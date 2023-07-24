@@ -19,10 +19,16 @@ def summary(configuration):
 
 
 def to_cmd(c, _path=None):
+    """
     command = f'PYTHONPATH=. python3 ../learner.py '\
         f'--dataset ICEWS14 '\
         f'--model {c["model"]} '\
         f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --time_reg {c["time_reg"]} --time_norm {c["time_norm"]} --time_reg_w {c["time_reg_w"]} --p_norm {c["p_norm"]}'
+    """
+    command = f'PYTHONPATH=. python3 ../learner.py ' \
+              f'--dataset ICEWS14 ' \
+              f'--model {c["model"]} ' \
+              f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --rnn {c["rnn"]} --rnn_size {c["rnn_size"]}'
     return command
 
 
@@ -32,6 +38,7 @@ def to_logfile(c, path):
 
 
 def main(argv):
+    """
     hyp_space = [dict(
         rank=[5, 25, 50, 100, 500, 2000],
         emb_reg=[1e-1, 1e-2, 1e-3, 1e-4],
@@ -50,11 +57,18 @@ def main(argv):
             model=['ChronoR'],
             time_reg=['smooth']
         )]
-
+    """
+    hyp_space = [dict(
+        rank=[5, 25, 50, 100, 500, 2000],
+        emb_reg=[1e-1, 1e-2, 1e-3, 1e-4],
+        rnn=['GRU', 'LSTM', 'LinRNN'],
+        rnn_size=[5, 25, 50, 100, 500],
+        model=['RTComplEx']
+    )]
     configurations = list(cartesian_product(hyp_space[int(argv[0])]))
 
-    path = 'logs/chronoR/icews14'
-    path_from_here = 'scripts/logs/chronoR/icews14'
+    path = 'logs/rtcomplex/icews14'
+    path_from_here = 'scripts/logs/rtcomplex/icews14'
 
     # If the folder that will contain logs does not exist, create it
     #if not os.path.exists(path):
@@ -62,6 +76,9 @@ def main(argv):
 
     command_lines = set()
     for cfg in configurations:
+        if "rnn_size" in cfg.keys():
+            if cfg["rnn_size"] > cfg["rank"]:
+                continue
         logfile = to_logfile(cfg, path)
         logfilefromhere = to_logfile(cfg, path_from_here)
 
