@@ -10,7 +10,7 @@ from datasets import TemporalDataset
 from optimizers import TKBCOptimizer, IKBCOptimizer
 from models import ComplEx, TComplEx, TNTComplEx, RTComplEx
 from chronor import ChronoR
-from regularizers import N3, L2, SmoothRegularizer, ExpDecayRegularizer, Np, Lp, Norm, ComplExRegularizer
+from regularizers import N3, L2, SmoothRegularizer, ExpDecayRegularizer, Np, Lp, Norm, ComplExRegularizer, LinearRegularizer
 
 parser = argparse.ArgumentParser(
     description="Temporal ComplEx"
@@ -76,7 +76,7 @@ parser.add_argument(
 )
 
 time_regs = [
-    'smooth', 'complex', 'expdecay'
+    'smooth', 'complex', 'expdecay', 'linear'
 ]
 
 parser.add_argument(
@@ -130,7 +130,8 @@ norm = {
 time_reg = {
     'smooth': SmoothRegularizer(args.time_reg_w, norm),
     'expdecay': ExpDecayRegularizer(args.time_reg_w, norm),
-    'complex': ComplExRegularizer(args.time_reg_w, norm)
+    'complex': ComplExRegularizer(args.time_reg_w, norm),
+    'linear': LinearRegularizer(args.time_reg_w)
 }[args.time_reg]
 
 for epoch in range(args.max_epochs):
