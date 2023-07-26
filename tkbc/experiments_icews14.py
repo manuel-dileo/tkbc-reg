@@ -64,7 +64,7 @@ def main(argv):
         rank=[2000],
         emb_reg=[1e-1, 1e-2, 1e-3, 1e-4],
         time_reg_w=[1, 1e-1, 1e-2, 1e-3, 1e-4],
-        model=['TNTComplEx'],
+        model=['TNTComplEx', 'ChronoR'],
         time_reg=['linear']
     )]
     """
@@ -79,8 +79,8 @@ def main(argv):
     """
     configurations = list(cartesian_product(hyp_space[int(argv[0])]))
 
-    path = 'logs/telm-reg/icews14'
-    path_from_here = 'scripts/logs/telm-reg/icews14'
+    path = 'logs/telm/icews14'
+    path_from_here = 'scripts/logs/telm/icews14'
 
     # If the folder that will contain logs does not exist, create it
     #if not os.path.exists(path):
