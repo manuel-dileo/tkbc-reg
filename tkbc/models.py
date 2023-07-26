@@ -472,7 +472,7 @@ class RTComplEx(TKBCModel):
 class TNTComplEx(TKBCModel):
     def __init__(
             self, sizes: Tuple[int, int, int, int], rank: int,
-            no_time_emb=False, init_size: float = 1e-2
+            no_time_emb=False, init_size: float = 1e-2, temporal_bias = False
     ):
         super(TNTComplEx, self).__init__()
         self.sizes = sizes
@@ -486,6 +486,12 @@ class TNTComplEx(TKBCModel):
         self.embeddings[1].weight.data *= init_size
         self.embeddings[2].weight.data *= init_size
         self.embeddings[3].weight.data *= init_size
+
+        self.W = None
+        self.temporal_bias = temporal_bias
+        if temporal_bias:
+            self.W = nn.Embedding(1, 2*rank, sparse=True)
+            self.W.weight.data *= init_size
 
         self.no_time_emb = no_time_emb
 
@@ -546,7 +552,8 @@ class TNTComplEx(TKBCModel):
                (lhs[0] * full_rel[0] - lhs[1] * full_rel[1]) @ right[0].t() +
                (lhs[1] * full_rel[0] + lhs[0] * full_rel[1]) @ right[1].t()
             ), regularizer,
-               self.embeddings[2].weight[:-1] if self.no_time_emb else self.embeddings[2].weight
+               self.embeddings[2].weight[:-1] if self.no_time_emb else self.embeddings[2].weight,
+               self.W.weight if self.temporal_bias else None
         )
 
     def forward_over_time(self, x):

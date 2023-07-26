@@ -10,7 +10,7 @@ from datasets import TemporalDataset
 from optimizers import TKBCOptimizer, IKBCOptimizer
 from models import ComplEx, TComplEx, TNTComplEx, RTComplEx
 from chronor import ChronoR
-from regularizers import N3, L2, SmoothRegularizer, ExpDecayRegularizer, Np, Lp, Norm
+from regularizers import N3, L2, SmoothRegularizer, ExpDecayRegularizer, Np, Lp, Norm, ComplExRegularizer
 
 parser = argparse.ArgumentParser(
     description="Temporal ComplEx"
@@ -75,9 +75,13 @@ parser.add_argument(
     help="Timestamp regularizer strength"
 )
 
+time_regs = [
+    'smooth', 'complex', 'expdecay'
+]
+
 parser.add_argument(
-    '--time_reg', default='smooth', type=str,
-    help='Type of time regularizer [smooth, expdecay]'
+    '--time_reg', choices=time_regs,
+    help="Time regularizer in {}".format(time_regs)
 )
 
 parser.add_argument(
@@ -101,11 +105,12 @@ args = parser.parse_args()
 dataset = TemporalDataset(args.dataset)
 
 sizes = dataset.get_shape()
+temporal_bias = args.time_reg == "complex"
 model = {
     'ComplEx': ComplEx(sizes, args.rank),
     'TComplEx': TComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
     'RTComplEx': RTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb, rnnmodel=args.rnn, rnn_size=int(args.rnn_size)),
-    'TNTComplEx': TNTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
+    'TNTComplEx': TNTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb, temporal_bias=temporal_bias),
     'ChronoR': ChronoR(sizes, args.rank, no_time_emb = args.no_time_emb)
 }[args.model]
 model = model.cuda()
@@ -124,7 +129,8 @@ norm = {
 
 time_reg = {
     'smooth': SmoothRegularizer(args.time_reg_w, norm),
-    'expdecay': ExpDecayRegularizer(args.time_reg_w, norm)
+    'expdecay': ExpDecayRegularizer(args.time_reg_w, norm),
+    'complex': ComplExRegularizer(args.time_reg_w, norm=None)
 }[args.time_reg]
 
 for epoch in range(args.max_epochs):
