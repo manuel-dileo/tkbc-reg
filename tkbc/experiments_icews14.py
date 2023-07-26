@@ -19,7 +19,6 @@ def summary(configuration):
 
 
 def to_cmd(c, _path=None):
-    """
     command = f'PYTHONPATH=. python3 ../learner.py '\
         f'--dataset ICEWS14 '\
         f'--model {c["model"]} '\
@@ -29,6 +28,7 @@ def to_cmd(c, _path=None):
               f'--dataset ICEWS14 ' \
               f'--model {c["model"]} ' \
               f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --rnn {c["rnn"]} --rnn_size {c["rnn_size"]}'
+    """
     return command
 
 
@@ -59,16 +59,27 @@ def main(argv):
         )]
     """
     hyp_space = [dict(
+        rank=[2000],
+        emb_reg=[1e-1, 1e-2, 1e-3, 1e-4],
+        time_reg_w=[1, 1e-1, 1e-2, 1e-3, 1e-4],
+        time_norm=['Np','Lp'],
+        p_norm=[1,2,3,4,5],
+        model=['TNTComplEx'],
+        time_reg=['complex']
+    )]
+    """
+    hyp_space = [dict(
         rank=[5, 25, 50, 100, 500, 2000],
         emb_reg=[1e-1, 1e-2, 1e-3, 1e-4],
         rnn=['GRU', 'LSTM', 'LinRNN'],
         rnn_size=[5, 25, 50, 100, 500],
         model=['RTComplEx']
     )]
+    """
     configurations = list(cartesian_product(hyp_space[int(argv[0])]))
 
-    path = 'logs/rtcomplex/icews14'
-    path_from_here = 'scripts/logs/rtcomplex/icews14'
+    path = 'logs/telm-reg/icews14'
+    path_from_here = 'scripts/logs/telm-reg/icews14'
 
     # If the folder that will contain logs does not exist, create it
     #if not os.path.exists(path):
