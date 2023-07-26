@@ -130,7 +130,7 @@ norm = {
 time_reg = {
     'smooth': SmoothRegularizer(args.time_reg_w, norm),
     'expdecay': ExpDecayRegularizer(args.time_reg_w, norm),
-    'complex': ComplExRegularizer(args.time_reg_w, norm=None)
+    'complex': ComplExRegularizer(args.time_reg_w, norm)
 }[args.time_reg]
 
 for epoch in range(args.max_epochs):
