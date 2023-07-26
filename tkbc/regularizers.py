@@ -55,7 +55,7 @@ class TimeRegularizer(Regularizer, ABC):
 
     def forward(self, factors: Tuple[torch.Tensor], Wb=None):
         diff = self.time_regularize(factors, Wb)
-        if norm is not None:
+        if self.norm is not None:
             norm_diff = self.norm.forward(diff)
         else:
             norm_diff = diff
