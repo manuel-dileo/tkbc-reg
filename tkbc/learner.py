@@ -105,7 +105,7 @@ args = parser.parse_args()
 dataset = TemporalDataset(args.dataset)
 
 sizes = dataset.get_shape()
-temporal_bias = args.time_reg == "complex"
+temporal_bias = args.time_reg == "complex" or args.time_reg == "linear"
 model = {
     'ComplEx': ComplEx(sizes, args.rank),
     'TComplEx': TComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
@@ -131,7 +131,7 @@ time_reg = {
     'smooth': SmoothRegularizer(args.time_reg_w, norm),
     'expdecay': ExpDecayRegularizer(args.time_reg_w, norm),
     'complex': ComplExRegularizer(args.time_reg_w, norm),
-    'linear': LinearRegularizer(args.time_reg_w)
+    'linear': LinearRegularizer(args.time_reg_w, None)
 }[args.time_reg]
 
 for epoch in range(args.max_epochs):

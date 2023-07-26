@@ -93,19 +93,17 @@ class SmoothRegularizer(TimeRegularizer):
 
 class LinearRegularizer(TimeRegularizer):
     def __init__(self, weight: float, norm):
-        super(LinearRegularizer, self).__init__()
-        self.weight = weight
-        self.norm = norm
+        super(LinearRegularizer, self).__init__(weight, norm)
 
 
     def time_regularize(self, factors: Tuple[torch.Tensor], Wb=None):
-        return factors[1:] - factors[:-1] - Wb.t()
+        return factors[1:] - factors[:-1] - Wb
 
     def forward(self, factors, Wb):
         ddiff = self.time_regularize(factors, Wb)
         rank = int(ddiff.shape[1] / 2)
         diff = torch.sqrt(ddiff[:, :rank]**2 + ddiff[:, rank:]**2)**3
-        return self.weight * torch.sum(diff) / (factor.shape[0] - 1)
+        return self.weight * torch.sum(diff) / (factors.shape[0] - 1)
 
 class ComplExRegularizer(TimeRegularizer):
     def __init__(self, weight: float, norm):
