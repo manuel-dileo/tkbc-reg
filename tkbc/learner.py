@@ -80,7 +80,7 @@ time_regs = [
 ]
 
 parser.add_argument(
-    '--time_reg', choices=time_regs,
+    '--time_reg', choices=time_regs, default="smooth",
     help="Time regularizer in {}".format(time_regs)
 )
 
