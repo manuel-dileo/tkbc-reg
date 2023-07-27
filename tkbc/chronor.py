@@ -29,7 +29,7 @@ def hadamard_complex(x_re, x_im, y_re, y_im):
 class ChronoR(TKBCModel):
     def __init__(
             self, sizes: Tuple[int, int, int, int], rank: int,
-            no_time_emb=False, init_size: float = 1e-2
+            no_time_emb=False, init_size: float = 1e-2, temporal_bias=False
     ):
         super(ChronoR, self).__init__()
         self.sizes = sizes
@@ -46,6 +46,12 @@ class ChronoR(TKBCModel):
         self.embeddings[0].weight.data *= init_size
         self.embeddings[1].weight.data *= init_size
         self.embeddings[2].weight.data *= init_size
+
+        self.W = None
+        self.temporal_bias = temporal_bias
+        if temporal_bias:
+            self.W = nn.Embedding(1, 2 * rank, sparse=True)
+            self.W.weight.data *= init_size
 
         self.no_time_emb = no_time_emb
 
@@ -108,7 +114,8 @@ class ChronoR(TKBCModel):
                    torch.sqrt(lhs[0] ** 2 + lhs[1] ** 2),
                    torch.sqrt(rt[0] ** 2 + rt[1] ** 2),
                    torch.sqrt(rhs[0] ** 2 + rhs[1] ** 2)
-               ), self.embeddings[2].weight[:-1] if self.no_time_emb else self.embeddings[2].weight
+               ), self.embeddings[2].weight[:-1] if self.no_time_emb else self.embeddings[2].weight, \
+                  self.W.weight if self.temporal_bias else None
 
     def forward_over_time(self, x):
         lhs = self.embeddings[0](x[:, 0])

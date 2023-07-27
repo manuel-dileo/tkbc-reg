@@ -111,7 +111,7 @@ model = {
     'TComplEx': TComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
     'RTComplEx': RTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb, rnnmodel=args.rnn, rnn_size=int(args.rnn_size)),
     'TNTComplEx': TNTComplEx(sizes, args.rank, no_time_emb=args.no_time_emb, temporal_bias=temporal_bias),
-    'ChronoR': ChronoR(sizes, args.rank, no_time_emb = args.no_time_emb)
+    'ChronoR': ChronoR(sizes, args.rank, no_time_emb = args.no_time_emb, temporal_bias=temporal_bias)
 }[args.model]
 model = model.cuda()
 
