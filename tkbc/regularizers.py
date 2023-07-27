@@ -91,9 +91,9 @@ class SmoothRegularizer(TimeRegularizer):
     def forward(self, factors: Tuple[torch.Tensor], Wb=None):
         return super().forward(factors)
 
-class LinearRegularizer(TimeRegularizer):
+class TelmRegularizer(TimeRegularizer):
     def __init__(self, weight: float, norm):
-        super(LinearRegularizer, self).__init__(weight, norm)
+        super(TelmRegularizer, self).__init__(weight, norm)
 
 
     def time_regularize(self, factors: Tuple[torch.Tensor], Wb=None):
@@ -101,9 +101,13 @@ class LinearRegularizer(TimeRegularizer):
 
     def forward(self, factors, Wb):
         ddiff = self.time_regularize(factors, Wb)
-        rank = int(ddiff.shape[1] / 2)
-        diff = torch.sqrt(ddiff[:, :rank]**2 + ddiff[:, rank:]**2)**3
-        return self.weight * torch.sum(diff) / (factors.shape[0] - 1)
+        #rank = int(ddiff.shape[1] / 2)
+        #diff = torch.sqrt(ddiff[:, :rank]**2 + ddiff[:, rank:]**2)**3
+        if self.norm is  not None:
+            norm_diff = self.norm.forward(diff)
+        else:
+            norm_diff = torch.sum(ddiff)
+        return self.weight * torch.sum(norm_diff) / (factors.shape[0] - 1)
 
 class ComplExRegularizer(TimeRegularizer):
     def __init__(self, weight: float, norm):
