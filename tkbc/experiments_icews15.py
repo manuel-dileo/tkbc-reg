@@ -77,6 +77,7 @@ def main(argv):
         logfilefromhere = to_logfile(cfg, path_from_here)
 
         completed = False
+        line = ''
         if os.path.isfile(logfilefromhere):
             with open(logfilefromhere, 'r', encoding='utf-8', errors='ignore') as f:
                 #content = f.read()
