@@ -21,7 +21,7 @@ def summary(configuration):
 def to_cmd(c, _path=None):
     # command RTComplEx
     command = f'PYTHONPATH=. python3 ../learner.py ' \
-              f'--dataset ICEWS05-15' \
+              f'--dataset ICEWS05-15 ' \
               f'--model {c["model"]} ' \
               f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --rnn {c["rnn"]} --rnn_size {c["rnn_size"]}'
     return command
