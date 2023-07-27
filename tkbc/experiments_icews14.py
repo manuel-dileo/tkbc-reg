@@ -19,17 +19,12 @@ def summary(configuration):
 
 
 def to_cmd(c, _path=None):
-    """
     #command smooth
     command = f'PYTHONPATH=. python3 ../learner.py '\
         f'--dataset ICEWS14 '\
         f'--model {c["model"]} '\
         f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --time_reg {c["time_reg"]} --time_norm {c["time_norm"]} --time_reg_w {c["time_reg_w"]} --p_norm {c["p_norm"]}'
-    """
-    command = f'PYTHONPATH=. python3 ../learner.py ' \
-              f'--dataset ICEWS14 ' \
-              f'--model {c["model"]} ' \
-              f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --time_reg_w {c["time_reg_w"]} --time_reg {c["time_reg"]}'
+
     """
     #command RTComplEx
     command = f'PYTHONPATH=. python3 ../learner.py ' \
@@ -54,8 +49,8 @@ def main(argv):
         time_reg_w=[1, 1e-1, 1e-2, 1e-3, 1e-4],
         time_norm=['Lp'],
         p_norm=[1, 2, 3, 4, 5],
-        model=['ChronoR'],
-        time_reg=['smooth']
+        model=['TNTComplEx'],
+        time_reg=['telm']
     ),
         dict(
             rank=[5, 25, 50, 100, 500, 2000],
@@ -63,18 +58,29 @@ def main(argv):
             time_reg_w=[1, 1e-1, 1e-2, 1e-3, 1e-4],
             time_norm=['Np'],
             p_norm=[1, 2, 3, 4, 5],
-            model=['ChronoR'],
-            time_reg=['smooth']
+            model=['TNTComplEx'],
+            time_reg=['telm']
         )]
+    """
+    hyp_space = [dict(
+        rank=[2000],
+        emb_reg=[0.001],
+        time_reg_w=[0.001],
+        time_norm=['Np'],
+        p_norm=[3, 4, 5],
+        model=['TNTComplEx'],
+        time_reg=['telm']
+    )]
     """
     #Grid for Linear
     hyp_space = [dict(
         rank=[2000],
         emb_reg=[1e-1, 1e-2, 1e-3, 1e-4],
         time_reg_w=[1, 1e-1, 1e-2, 1e-3, 1e-4],
-        model=['TNTComplEx', 'ChronoR'],
+        model=['TNTComplEx'],
         time_reg=['linear']
     )]
+    """
     """
     #Grid for RTComplEx
     hyp_space = [dict(
