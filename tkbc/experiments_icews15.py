@@ -19,10 +19,16 @@ def summary(configuration):
 
 
 def to_cmd(c, _path=None):
+    """
     command = f'PYTHONPATH=. python3 ../learner.py '\
         f'--dataset ICEWS05-15 '\
         f'--model {c["model"]} '\
         f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --time_reg {c["time_reg"]} --time_norm {c["time_norm"]} --time_reg_w {c["time_reg_w"]} --p_norm {c["p_norm"]}'
+    """
+    command = f'PYTHONPATH=. python3 ../learner.py ' \
+              f'--dataset yago15k ' \
+              f'--model {c["model"]} ' \
+              f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --time_reg {c["time_reg"]} --time_reg_w {c["time_reg_w"]}'
     return command
 
 
@@ -32,6 +38,7 @@ def to_logfile(c, path):
 
 
 def main(argv):
+    """"
     hyp_space = [dict(
         rank=[2000],
         emb_reg=[1e-1, 1e-2, 1e-3, 1e-4],
@@ -40,6 +47,15 @@ def main(argv):
         p_norm=[1, 2, 3, 4, 5],
         model=['ChronoR'],
         time_reg=['smooth']
+    )]
+    """
+    # Grid for Linear
+    hyp_space = [dict(
+        rank=[2000],
+        emb_reg=[1e-1, 1e-2, 1e-3, 1e-4],
+        time_reg_w=[1, 1e-1, 1e-2, 1e-3, 1e-4],
+        model=['TNTComplEx'],
+        time_reg=['telm']
     )]
     """
     hyp_space = [dict(
@@ -64,8 +80,8 @@ def main(argv):
 
     configurations = list(cartesian_product(hyp_space[int(argv[0])]))
 
-    path = 'logs/chronoR/icews15'
-    path_from_here = 'scripts/logs/chronoR/icews15'
+    path = 'logs/telm/icews15'
+    path_from_here = 'scripts/logs/telm/icews15'
 
     # If the folder that will contain logs does not exist, create it
     #if not os.path.exists(path):
