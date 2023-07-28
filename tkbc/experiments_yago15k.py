@@ -26,9 +26,15 @@ def to_cmd(c, _path=None):
         f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --time_reg {c["time_reg"]} --time_norm {c["time_norm"]} --time_reg_w {c["time_reg_w"]} --p_norm {c["p_norm"]}'
     """
     command = f'PYTHONPATH=. python3 ../learner.py ' \
+              f'--dataset yago15k ' \
+              f'--model {c["model"]} ' \
+              f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --time_reg {c["time_reg"]} --time_reg_w {c["time_reg_w"]}'
+    """
+    command = f'PYTHONPATH=. python3 ../learner.py ' \
         f'--dataset yago15k ' \
         f'--model {c["model"]} ' \
         f'--rank {c["rank"]} --emb_reg {c["emb_reg"]} --rnn {c["rnn"]} --rnn_size {c["rnn_size"]}'
+    """
     return command
 
 
@@ -38,6 +44,14 @@ def to_logfile(c, path):
 
 
 def main(argv):
+    # Grid for Linear
+    hyp_space = [dict(
+        rank=[2000],
+        emb_reg=[1e-1, 1e-2, 1e-3, 1e-4],
+        time_reg_w=[1, 1e-1, 1e-2, 1e-3, 1e-4],
+        model=['TNTComplEx'],
+        time_reg=['telm']
+    )]
     """"
     hyp_space = [dict(
         rank=[5, 25, 50, 100, 500, 2000],
@@ -58,6 +72,7 @@ def main(argv):
             time_reg=['smooth']
         )]
     """
+    """
     hyp_space = [
         dict(
             rank=[5, 25, 50, 100, 500, 2000],
@@ -66,11 +81,11 @@ def main(argv):
             rnn_size = [5, 25, 50, 100, 500],
             model=['RTComplEx']
         )]
-
+    """
     configurations = list(cartesian_product(hyp_space[int(argv[0])]))
 
-    path = 'logs/rtcomplex/yago15k'
-    path_from_here = 'scripts/logs/rtcomplex/yago15k'
+    path = 'logs/telm/yago15k'
+    path_from_here = 'scripts/logs/telm/yago15k'
 
     # If the folder that will contain logs does not exist, create it
     #if not os.path.exists(path):

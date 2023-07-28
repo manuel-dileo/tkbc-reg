@@ -101,13 +101,9 @@ class TelmRegularizer(TimeRegularizer):
 
     def forward(self, factors, Wb):
         ddiff = self.time_regularize(factors, Wb)
-        #rank = int(ddiff.shape[1] / 2)
-        #diff = torch.sqrt(ddiff[:, :rank]**2 + ddiff[:, rank:]**2)**3
-        if self.norm is  not None:
-            norm_diff = self.norm.forward(ddiff)
-        else:
-            norm_diff = torch.sum(ddiff)
-        return self.weight * torch.sum(norm_diff) / (factors.shape[0] - 1)
+        rank = int(ddiff.shape[1] / 2)
+        diff = torch.sqrt(ddiff[:, :rank]**2 + ddiff[:, rank:]**2)**3
+        return self.weight * torch.sum(diff) / (factors.shape[0] - 1)
 
 class ComplExRegularizer(TimeRegularizer):
     def __init__(self, weight: float, norm):
