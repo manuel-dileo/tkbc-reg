@@ -105,7 +105,7 @@ args = parser.parse_args()
 dataset = TemporalDataset(args.dataset)
 
 sizes = dataset.get_shape()
-temporal_bias = args.time_reg == "complex" or args.time_reg == "telm"
+temporal_bias = args.time_reg == "complex" or args.time_reg == "linear"
 model = {
     'ComplEx': ComplEx(sizes, args.rank),
     'TComplEx': TComplEx(sizes, args.rank, no_time_emb=args.no_time_emb),
