@@ -76,7 +76,7 @@ parser.add_argument(
 )
 
 time_regs = [
-    'smooth', 'complex', 'expdecay', 'telm'
+    'smooth', 'complex', 'expdecay', 'linear'
 ]
 
 parser.add_argument(
@@ -130,7 +130,7 @@ norm = {
 time_reg = {
     'smooth': SmoothRegularizer(args.time_reg_w, norm),
     'expdecay': ExpDecayRegularizer(args.time_reg_w, norm),
-    'telm': TelmRegularizer(args.time_reg_w, norm)
+    'linear': TelmRegularizer(args.time_reg_w, norm)
 }[args.time_reg]
 
 for epoch in range(args.max_epochs):
