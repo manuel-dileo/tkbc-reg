@@ -24,7 +24,7 @@ class TKBCOptimizer(object):
         self.batch_size = batch_size
         self.verbose = verbose
 
-    def epoch(self, examples: torch.LongTensor):
+    def epoch(self, examples: torch.LongTensor, epoch, max_epoch):
         actual_examples = examples[torch.randperm(examples.shape[0]), :]
         loss = nn.CrossEntropyLoss(reduction='mean')
         with tqdm.tqdm(total=examples.shape[0], unit='ex', disable=not self.verbose) as bar:
@@ -41,7 +41,9 @@ class TKBCOptimizer(object):
                 l_reg = self.emb_regularizer.forward(factors)
                 l_time = torch.zeros_like(l_reg)
                 if time is not None:
-                    l_time = self.temporal_regularizer.forward(time, Wb)
+                    l_time, diff = self.temporal_regularizer.forward(time, Wb)
+                    if epoch==max_epoch-1:
+                        print(f"Time difference:\n{diff}")
                 l = l_fit + l_reg + l_time
 
                 self.optimizer.zero_grad()

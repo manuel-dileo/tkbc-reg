@@ -151,7 +151,7 @@ for epoch in range(args.max_epochs):
             model, emb_reg, time_reg, opt,
             batch_size=args.batch_size
         )
-        optimizer.epoch(examples)
+        optimizer.epoch(examples, epoch, args.max_epochs)
 
 
     def avg_both(mrrs: Dict[str, float], hits: Dict[str, torch.FloatTensor]):
