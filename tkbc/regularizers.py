@@ -68,13 +68,10 @@ class Lp(Norm):
         self.p = p
 
     def forward(self, factors: Tuple[torch.Tensor]):
-        ddiff = torch.sum(torch.abs(f) ** self.p for f in factors) ** (1 / self.p)
-        return sum(ddiff), ddiff
-        """
         return sum(
             torch.sum(torch.abs(f) ** self.p) ** (1.0 / self.p)
-            for f in factors)
-        """
+            for f in factors), [torch.sum(torch.abs(f) ** self.p)**(1/self.p)
+            for f in factors]
 
 class Np(Norm):
     def __init__(self, p: float):
@@ -82,13 +79,11 @@ class Np(Norm):
         self.p = p
 
     def forward(self, factors: Tuple[torch.Tensor]):
-        ddiff = torch.sum(torch.abs(f)**self.p for f in factors)
-        return sum(ddiff), ddiff
-        """
         return sum(
             torch.sum(torch.abs(f) ** self.p)
-            for f in factors)
-        """
+            for f in factors), [torch.sum(torch.abs(f) ** self.p)
+            for f in factors]
+
 class SmoothRegularizer(TimeRegularizer):
     def __init__(self, weight: float, norm):
         super(SmoothRegularizer, self).__init__(weight, norm)
