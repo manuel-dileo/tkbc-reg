@@ -42,8 +42,8 @@ class TKBCOptimizer(object):
                 l_time = torch.zeros_like(l_reg)
                 if time is not None:
                     l_time, diff = self.temporal_regularizer.forward(time, Wb)
-                    if epoch==max_epoch-1:
-                        print(f"Time difference:\n{diff}")
+                    if epoch == max_epoch-1:
+                        print(f"\nTime diff:\n{diff}")
                 l = l_fit + l_reg + l_time
 
                 self.optimizer.zero_grad()
