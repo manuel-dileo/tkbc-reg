@@ -80,7 +80,7 @@ class ChronoR(TKBCModel):
         return torch.sum(hrt[0]*rhs[0]+hrt[1]*rhs[1],1,keepdim=True)
     
     def forward(self, x):
-        if rank % 2 != 0:
+        if self.rank % 2 != 0:
             raise Exception('Rank must be even')
         lhs = self.embeddings[0](x[:, 0])
         rel = self.embeddings[1](x[:, 1])
