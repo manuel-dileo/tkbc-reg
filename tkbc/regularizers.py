@@ -59,7 +59,7 @@ class TimeRegularizer(Regularizer, ABC):
             norm_diff = self.norm.forward(diff)
         else:
             norm_diff = diff
-        return self.weight * norm_diff / (factors.shape[0] - 1), diff
+        return self.weight * norm_diff / (factors.shape[0] - 1), torch.sum(diff)
 
 
 class Lp(Norm):
