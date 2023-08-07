@@ -59,7 +59,7 @@ class TimeRegularizer(Regularizer, ABC):
             norm_diff = self.norm.forward(diff)
         else:
             norm_diff = diff
-        return self.weight * norm_diff / (factors.shape[0] - 1), torch.sum(diff, dim=1)
+        return self.weight * norm_diff / (factors.shape[0] - 1)
 
 
 class Lp(Norm):
@@ -103,7 +103,7 @@ class TelmRegularizer(TimeRegularizer):
         ddiff = self.time_regularize(factors, Wb)
         rank = int(ddiff.shape[1] / 2)
         diff = torch.sqrt(ddiff[:, :rank]**2 + ddiff[:, rank:]**2)**3
-        return self.weight * torch.sum(diff) / (factors.shape[0] - 1), diff
+        return self.weight * torch.sum(diff) / (factors.shape[0] - 1)
 
 class ComplExRegularizer(TimeRegularizer):
     def __init__(self, weight: float, norm):
