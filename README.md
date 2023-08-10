@@ -1,6 +1,7 @@
-# README REFERS TO ORIGINAL REPO, IT CONTAINS OLD INFO, README UNDER CONSTRUCTION
-# Knowledge Base Completion (kbc)
-This code reproduces results in [Tensor Decompositions for Temporal Knowledge Base Completion](https://arxiv.org/abs/2004.04926) (ICLR 2020).
+# 
+# Temporal Regularisers for Neural Link Predictor
+This code reproduces results in [Temporal Regularisers for Neural Link Predictor]().  
+This repository is under development and it may contain also additional experiments, datasets, and models not discussed in our manuscript. However, below we provide all the instructions to reproduce the results.
 
 ## Installation
 Create a conda environment with pytorch and scikit-learn :
@@ -19,7 +20,7 @@ python setup.py install
 
 To download the datasets, go to the tkbc/scripts folder and run:
 ```
-chmod +x download_data.sh
+chmod +x download_tntcomplex_data.sh
 ./download_data.sh
 ```
 
@@ -27,25 +28,38 @@ Once the datasets are downloaded, add them to the package data folder by running
 ```
 python tkbc/process_icews.py
 python tkbc/process_yago.py
-python tkbc/process_wikidata.py  # about 3 minutes.
 ```
 
 This will create the files required to compute the filtered metrics.
 
 ## Reproducing results
 
-In order to reproduce the results on the smaller datasets in the paper, run the following commands
+In order to reproduce the best results reported in the paper, run the following commands
 
 ```
-python tkbc/learner.py --dataset ICEWS14 --model TNTComplEx --rank 156 --emb_reg 1e-2 --time_reg 1e-2
+python tkbc/learner.py --dataset ICEWS14 --model TNTComplEx --rank 2000 --time_reg smooth --time_reg_w 0.01 --time_norm Np --p_norm 4 --emb_reg 0.001
 
-python tkbc/learner.py --dataset ICEWS05-15 --model TNTComplEx --rank 128 --emb_reg 1e-3 --time_reg 1
+python tkbc/learner.py --dataset ICEWS05-15 --model TNTComplEx --rank 2000 --time_reg smooth --time_reg_w 1 --time_norm Np --p_norm 5 --emb_reg 0.001
 
-python tkbc/learner.py --dataset yago15k --model TNTComplEx --rank 189 --no_time_emb --emb_reg 1e-2 --time_reg 1
+python tkbc/learner.py --dataset yago15k --model TNTComplEx --rank 2000 --time_reg smooth --time_reg_w 0.0001 --time_norm Np --p_norm 5 --emb_reg 0.0001 
 ```
+
+### Reproducing ChronoR results
+The original implementation of ChronoR (2021) is not available, we re-implement the solution in our framework. In order to reproduce the best ChronoR results, run the following commands
+
+```
+python tkbc/learner.py --dataset ICEWS14 --model ChronoR --rank 2000 --time_reg smooth --time_reg_w 0.0001 --time_norm Lp --p_norm 4 --emb_reg 0.01
+
+python tkbc/learner.py --dataset ICEWS05-15 --model ChronoR --rank 2000 --time_reg smooth --time_reg_w 0.0001 --time_norm Lp --p_norm 3 --emb_reg 0.01
+
+python tkbc/learner.py --dataset yago15k --model ChronoR --rank 2000 --time_reg smooth --time_reg_w 1 --time_norm Lp --p_norm 2 --emb_reg 0.01 
+```
+
+### Reproducing TeLM results
+The original implementation of TeLM (2021) is [available](https://github.com/soledad921/TeLM). In order to reproduce the results reported in our manuscript, you can follow their instruction and set the rank equal to 1000.
 
 
 
 
 ## License
-tkbc is CC-BY-NC licensed, as found in the LICENSE file.
+tkbc-reg is CC-BY-NC licensed, as found in the LICENSE file.
