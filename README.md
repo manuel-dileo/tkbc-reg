@@ -1,6 +1,7 @@
 # 
 # Temporal Regularisers for Neural Link Predictor
-This code reproduces results in UNDER REVIEW 
+This code reproduces results in UNDER REVIEW.  
+
 This repository is under development and it may contain also additional experiments, datasets, and models not discussed in our manuscript. However, below we provide all the instructions to reproduce the results.
 
 ## Installation
