@@ -58,6 +58,12 @@ python tkbc/learner.py --dataset yago15k --model ChronoR --rank 2000 --time_reg 
 ### Reproducing TeLM results
 The original implementation of TeLM (2021) is [available](https://github.com/soledad921/TeLM). In order to reproduce the results reported in our manuscript, you can follow their instruction and set the rank equal to 1000.
 
+### Use of RNN regularisers
+In order to use recurrent architecture as implicit temporal regularisers, run commands like the following:
+```
+python tkbc/learner.py --dataset ICEWS14 --model RTComplEx --rank 2000 --rnn GRU --rnn_size 500 --emb_reg 0.01
+```
+
 
 
 
