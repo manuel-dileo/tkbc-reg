@@ -82,6 +82,7 @@ class Np(Norm):
             torch.sum(torch.abs(f) ** self.p)
             for f in factors)
 class SmoothRegularizer(TimeRegularizer):
+    """Temporal smoothing regularizer"""
     def __init__(self, weight: float, norm):
         super(SmoothRegularizer, self).__init__(weight, norm)
 
@@ -92,6 +93,7 @@ class SmoothRegularizer(TimeRegularizer):
         return super().forward(factors)
 
 class TelmRegularizer(TimeRegularizer):
+    "Regularizer proposed in TeLM, also known as Linear3"
     def __init__(self, weight: float, norm):
         super(TelmRegularizer, self).__init__(weight, norm)
 
@@ -106,6 +108,10 @@ class TelmRegularizer(TimeRegularizer):
         return self.weight * torch.sum(diff) / (factors.shape[0] - 1)
 
 class ComplExRegularizer(TimeRegularizer):
+    """
+    Regularizer based on Linear3 that uses a ComplEx score function instead of TransE.
+    Part of an experimental test, we do not suggest to use it.
+    """
     def __init__(self, weight: float, norm):
         super(ComplExRegularizer, self).__init__(weight, norm)
 
@@ -125,6 +131,10 @@ class ComplExRegularizer(TimeRegularizer):
         return super().forward(factors, Wb)
 
 class ExpDecayRegularizer(TimeRegularizer):
+    """
+    Regularizer based on exponential decay instead of temporal smoothing.
+    Part of an experimental test, we do not suggest to use it.
+    """
     def __init__(self, weight: float, norm, decay_factor=1e-1):
         super(ExpDecayRegularizer, self).__init__(weight, norm)
         self.decay_factor = decay_factor
@@ -142,55 +152,19 @@ class ExpDecayRegularizer(TimeRegularizer):
     def forward(self, factors: Tuple[torch.Tensor], Wb=None):
         return super().forward(factors) * (factors.shape[0]-1)
 
-"""
-class Lambda3(Regularizer):
-    def __init__(self, weight: float):
-        super(Lambda3, self).__init__()
-        self.weight = weight
+class Lambda3(TimeRegularizer):
+    """
+    Regularizer proposed in TNTComplEx, also known as Lambda3
+    """
+    def __init__(self, weight: float, norm):
+        super(Lambda3, self).__init__(weight, norm)
 
-    def forward(self, factors: Tuple[torch.Tensor]):
-        ddiff = factor[1:] - factor[:-1]
+
+    def time_regularize(self, factors: Tuple[torch.Tensor], Wb=None):
+        return factors[1:] - factors[:-1]
+
+    def forward(self, factors, Wb):
+        ddiff = self.time_regularize(factors, Wb)
         rank = int(ddiff.shape[1] / 2)
         diff = torch.sqrt(ddiff[:, :rank]**2 + ddiff[:, rank:]**2)**3
-        return self.weight * torch.sum(diff) / (factor.shape[0] - 1)
-
-class L1(Regularizer):
-    def __init__(self, weight: float):
-        super().__init__()
-        self.weight = weight
-
-    def forward(self, factor: Tuple[torch.Tensor]):
-        ddiff = factor[1:] - factor[:-1]
-        diff = torch.abs(ddiff)
-        return self.weight * torch.sum(diff) / (factor.shape[0]-1)
-
-class L2(Regularizer):
-    def __init__(self, weight: float):
-        super().__init__()
-        self.weight = weight
-
-    def forward(self, factor: Tuple[torch.Tensor]):
-        ddiff = factor[1:] - factor[:-1]
-        diff = (torch.sum(torch.abs(ddiff)**2))**1/2
-        return self.weight * torch.sum(diff) / (factor.shape[0]-1)
-
-class F2(Regularizer):
-    def __init__(self, weight: float):
-        super().__init__()
-        self.weight = weight
-
-    def forward(self, factor: Tuple[torch.Tensor]):
-        ddiff = factor[1:] - factor[:-1]
-        diff = ddiff**2
-        return self.weight * torch.sum(diff) / (factor.shape[0]-1)
-
-class N3Temp(Regularizer):
-    def __init__(self, weight: float):
-        super().__init__()
-        self.weight = weight
-
-    def forward(self, factor: Tuple[torch.Tensor]):
-        ddiff = factor[1:] - factor[:-1]
-        diff = torch.abs(ddiff)**3
-        return self.weight * torch.sum(diff) / (factor.shape[0]-1)
-"""
+        return self.weight * torch.sum(diff) / (factors.shape[0] - 1)
