@@ -4,6 +4,24 @@ This code reproduces results in Enhancing neural link predictors for temporal kn
 
 This repository is under development and it may contain also additional experiments, datasets, and models not discussed in our manuscript. However, below we provide all the instructions to reproduce the results.
 
+## Cite
+If you use the code of this repository for your project or you find the work interesting, please cite the following work:
+
+Dileo, M., Minervini, P., Zignani, M., Gaito, S., Enhancing neural link predictors for temporal knowledge graphs with temporal regularisers. ESANN (2025). https://doi.org/10.14428/esann/2025.ES2025-28
+
+```bibtex
+@inproceedings{DileoESANN2025,
+  author       = {Manuel Dileo and
+                 Pasquale Minervini and
+                 Matteo Zignani and
+                 Sabrina Gaito},
+  title        = {Enhancing neural link predictors for temporal knowledge graphs with temporal regularisers},
+  booktitle    = {{ESANN}},
+  publisher      = {},
+  year         = {2025}
+}
+```
+
 ## Installation
 Create a conda environment with pytorch and scikit-learn :
 ```
