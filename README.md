@@ -1,8 +1,10 @@
 # 
 # Temporal Regularisers for Neural Link Predictor
-This code reproduces results in Enhancing neural link predictors for temporal knowledge graphs with temporal regularisers, accepted at ESANN 2025.  
+This code reproduces results in Enhancing neural link predictors for temporal knowledge graphs with temporal regularisers, accepted at ESANN 2025.
 
 This repository is under development and it may contain also additional experiments, datasets, and models not discussed in our manuscript. However, below we provide all the instructions to reproduce the results.
+
+**News** : Happy to announce that this work won the best paper award at ESANN 2025!
 
 ## Cite
 If you use the code of this repository for your project or you find the work interesting, please cite the following work:
