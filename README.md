@@ -42,7 +42,7 @@ python setup.py install
 To download the datasets, go to the tkbc/scripts folder and run:
 ```
 chmod +x download_tntcomplex_data.sh
-./download_data.sh
+./download_tntcomplex_data.sh
 ```
 
 Once the datasets are downloaded, add them to the package data folder by running :
